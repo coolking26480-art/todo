@@ -11,11 +11,11 @@ interface NavigationProps {
 
 const navItems = [
   { id: "home", label: "Home", icon: Brain },
-  { id: "code", label: "Code", icon: Code2 },
-  { id: "design", label: "Design", icon: Palette },
-  { id: "substack", label: "Substack", icon: BookOpen },
   { id: "about", label: "About Me", icon: User },
-];
+  { id: "design", label: "Design", icon: Palette },
+  { id: "code", label: "Code", icon: Code2 },
+  { id: "substack", label: "Substack", icon: BookOpen },
+ ];
 
 export default function Navigation({ activeView, onNavigate }: NavigationProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
