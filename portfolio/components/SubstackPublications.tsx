@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BookOpen, Clock, ArrowRight, Tag } from "lucide-react";
+import { BookOpen, Clock, ArrowRight, Tag, Hammer } from "lucide-react"; // Added Hammer icon
 
 const posts = [
   {
@@ -51,6 +51,36 @@ const itemVariants = {
 };
 
 export default function SubstackPublications() {
+  // 🟢 CHANGE THIS TO 'false' TO REVERT BACK INSTANTLY
+  const isUnderConstruction = true; 
+
+  if (isUnderConstruction) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="glass-card-strong rounded-2xl p-8 sm:p-12 max-w-md text-center border border-white/10 shadow-2xl"
+        >
+          <div className="w-16 h-16 mx-auto rounded-full bg-biolum-500/10 flex items-center justify-center mb-6 border border-biolum-500/30">
+            <Hammer className="w-8 h-8 text-biolum-400 animate-pulse" />
+          </div>
+          <h2 className="font-serif text-3xl font-bold text-white mb-3 italic">
+            Under Construction
+          </h2>
+          <p className="text-slate-400 text-sm font-serif leading-relaxed mb-6">
+            The Substack publication page is currently undergoing a structural update. New essays and features will be landing here shortly.
+          </p>
+          <div className="text-xs font-mono text-slate-500 uppercase tracking-widest">
+            // Check back soon
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // --- Live Site Code (Kept intact below) ---
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
