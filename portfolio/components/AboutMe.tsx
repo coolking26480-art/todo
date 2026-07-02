@@ -1,0 +1,239 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { User, GraduationCap, Briefcase, Heart, MapPin, Calendar, Award } from "lucide-react";
+
+const education = [
+  {
+    degree: "M.S. in Computational Neuroscience",
+    institution: "Stanford University",
+    period: "2023 — 2025",
+    details: "Thesis on neural manifold geometry and representational learning in prefrontal cortex.",
+  },
+  {
+    degree: "B.S. in Computer Science & Cognitive Science",
+    institution: "MIT",
+    period: "2019 — 2023",
+    details: "Double major with focus on machine learning and computational cognitive modeling.",
+  },
+];
+
+const experience = [
+  {
+    role: "Research Intern",
+    company: "Allen Institute for Brain Science",
+    period: "Summer 2024",
+    description: "Developed analysis pipelines for large-scale calcium imaging datasets. Built visualization tools for neural population dynamics.",
+  },
+  {
+    role: "UX Design Intern",
+    company: "Neuralink",
+    period: "Summer 2023",
+    description: "Designed clinical interface prototypes for neural signal monitoring systems. Conducted usability studies with neurosurgeons.",
+  },
+  {
+    role: "Software Engineering Intern",
+    company: "Google Research",
+    period: "Summer 2022",
+    description: "Worked on large language model interpretability tools. Built interactive dashboards for attention pattern visualization.",
+  },
+];
+
+const interests = [
+  { icon: "🧠", label: "Computational Neuroscience", desc: "Understanding the brain through mathematical models" },
+  { icon: "🎨", label: "Interface Design", desc: "Building tools that feel like extensions of thought" },
+  { icon: "📚", label: "Science Writing", desc: "Making complex ideas accessible through storytelling" },
+  { icon: "🏔️", label: "Mountaineering", desc: "Finding clarity in high-altitude solitude" },
+];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: "easeOut" },
+  },
+};
+
+export default function AboutMe() {
+  return (
+    <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-16"
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <User className="w-6 h-6 text-biolum-400" />
+            <span className="font-sans text-sm text-biolum-400 tracking-wider uppercase font-medium">
+              Profile
+            </span>
+          </div>
+          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight">
+            About <span className="text-slate-600">Me</span>
+          </h2>
+          <p className="mt-4 text-slate-400 max-w-2xl font-sans text-base leading-relaxed">
+            A researcher and designer fascinated by the architecture of intelligence — both biological and artificial.
+          </p>
+        </motion.div>
+
+        {/* Asymmetric Swiss Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Column - Bio */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="lg:col-span-5"
+          >
+            <div className="glass-card rounded-2xl p-8 h-full">
+              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-biolum-500/30 to-purple-500/20 border border-biolum-500/20 flex items-center justify-center mb-6">
+                <span className="text-4xl">👤</span>
+              </div>
+              <h3 className="font-display text-2xl font-bold text-white mb-4">
+                Sujal Jain
+              </h3>
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-2 text-sm text-slate-400 font-sans">
+                  <MapPin size={14} className="text-slate-500" />
+                  <span>San Francisco, CA</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-400 font-sans">
+                  <Calendar size={14} className="text-slate-500" />
+                  <span>Available for collaborations</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-400 font-sans">
+                  <Award size={14} className="text-slate-500" />
+                  <span>NSF Graduate Research Fellow</span>
+                </div>
+              </div>
+              <div className="swiss-line mb-6" />
+              <p className="text-slate-400 text-sm leading-relaxed font-sans">
+                I believe the most interesting problems live at the intersection of disciplines. My work spans computational neuroscience, human-computer interaction, and creative technology — always seeking to build bridges between what we know about the brain and what we can create with code.
+              </p>
+              <p className="text-slate-400 text-sm leading-relaxed font-sans mt-4">
+                When not in the lab or at the keyboard, you will find me climbing rocks, reading philosophy, or experimenting with generative art.
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Right Column - Details */}
+          <div className="lg:col-span-7 space-y-8">
+            {/* Education */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <GraduationCap className="w-5 h-5 text-biolum-400" />
+                <h3 className="font-display text-xl font-semibold text-white">Education</h3>
+                <div className="flex-1 swiss-line" />
+              </div>
+
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-4"
+              >
+                {education.map((edu) => (
+                  <motion.div
+                    key={edu.degree}
+                    variants={itemVariants}
+                    className="glass-card rounded-xl p-6 hover:border-white/10 transition-colors"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
+                      <h4 className="font-sans text-base font-semibold text-white">{edu.degree}</h4>
+                      <span className="text-xs text-slate-500 font-mono whitespace-nowrap">{edu.period}</span>
+                    </div>
+                    <div className="text-sm text-biolum-300 font-sans mb-2">{edu.institution}</div>
+                    <p className="text-sm text-slate-400 font-sans leading-relaxed">{edu.details}</p>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </motion.div>
+
+            {/* Experience */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <Briefcase className="w-5 h-5 text-biolum-400" />
+                <h3 className="font-display text-xl font-semibold text-white">Experience</h3>
+                <div className="flex-1 swiss-line" />
+              </div>
+
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-4"
+              >
+                {experience.map((exp) => (
+                  <motion.div
+                    key={exp.role + exp.company}
+                    variants={itemVariants}
+                    className="glass-card rounded-xl p-6 hover:border-white/10 transition-colors"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
+                      <div>
+                        <h4 className="font-sans text-base font-semibold text-white">{exp.role}</h4>
+                        <div className="text-sm text-biolum-300 font-sans">{exp.company}</div>
+                      </div>
+                      <span className="text-xs text-slate-500 font-mono whitespace-nowrap">{exp.period}</span>
+                    </div>
+                    <p className="text-sm text-slate-400 font-sans leading-relaxed mt-2">{exp.description}</p>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </motion.div>
+
+            {/* Interests */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <Heart className="w-5 h-5 text-biolum-400" />
+                <h3 className="font-display text-xl font-semibold text-white">Interests</h3>
+                <div className="flex-1 swiss-line" />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {interests.map((interest) => (
+                  <motion.div
+                    key={interest.label}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4 }}
+                    whileHover={{ scale: 1.02 }}
+                    className="glass-card rounded-xl p-5 hover:border-white/10 transition-colors"
+                  >
+                    <div className="text-2xl mb-2">{interest.icon}</div>
+                    <h4 className="font-sans text-sm font-semibold text-white mb-1">{interest.label}</h4>
+                    <p className="text-xs text-slate-400 font-sans leading-relaxed">{interest.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
