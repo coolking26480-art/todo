@@ -6,43 +6,33 @@ import { Palette, Layers, Eye, ArrowUpRight } from "lucide-react";
 const designs = [
   {
     id: 1,
-    title: "Neural Interface Dashboard",
-    category: "UI/UX Design",
-    year: "2025",
-    description: "A clinical-grade dashboard for real-time neural signal visualization, designed for neurosurgeons and researchers.",
-    tags: ["Figma", "Design System", "Data Viz"],
+    title: "The Artistree Studio",
+    category: "Content Creator",
+    year: "2026",
+    description: "Crafted audience-focused content and collaborated with cross-functional teams to translate business objectives into cohesive marketing and communication deliverables.",
+    tags: ["Figma AI", "Canva Pro", "Affinity"],
     color: "from-cyan-500/10 to-blue-500/10",
     accent: "border-cyan-500/20",
   },
   {
     id: 2,
-    title: "Synaptic Brand Identity",
-    category: "Brand Design",
+    title: "Animal Welfare Committee, Pune",
+    category: "Head of Design",
     year: "2025",
-    description: "Complete visual identity system for a neurotechnology startup, from logo mark to motion guidelines.",
-    tags: ["Branding", "Motion", "Guidelines"],
+    description: "Curated visual assets not limited to social media content and managed a team of 6 designers.",
+    tags: ["Canva Pro", "Notion", "Figma"],
     color: "from-purple-500/10 to-pink-500/10",
     accent: "border-purple-500/20",
   },
   {
     id: 3,
-    title: "Cortex Magazine",
-    category: "Editorial Design",
-    year: "2024",
-    description: "Quarterly print and digital publication exploring the frontiers of brain science through long-form journalism.",
-    tags: ["Editorial", "Typography", "Print"],
+    title: "The safe Place",
+    category: "Lead Content Creator",
+    year: "2022",
+    description: "Illustrated posters on mental health issues and organised multiple events including seminars with board-certified psychologists.",
+    tags: ["Content Curation", "Canva Pro"],
     color: "from-amber-500/10 to-orange-500/10",
     accent: "border-amber-500/20",
-  },
-  {
-    id: 4,
-    title: "MindWave App",
-    category: "Mobile Design",
-    year: "2024",
-    description: "Meditation and cognitive training app with adaptive AI-driven sessions based on EEG feedback loops.",
-    tags: ["iOS", "Android", "Prototyping"],
-    color: "from-emerald-500/10 to-teal-500/10",
-    accent: "border-emerald-500/20",
   },
 ];
 
@@ -164,9 +154,9 @@ export default function DesignPortfolio() {
           className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8"
         >
           {[
-            { num: "01", title: "Clarity", desc: "Every element serves a purpose. No decoration without function." },
-            { num: "02", title: "Rhythm", desc: "Visual hierarchy guided by mathematical proportions and grid systems." },
-            { num: "03", title: "Depth", desc: "Layered information architecture that reveals complexity gradually." },
+            { num: "01", title: "Branding & Identity ideation", desc: "Crafting memorable visual languages rooted in strategic thinking and brand purpose." },
+            { num: "02", title: "Creative Direction", desc: "Orchestrating visual strategy and aesthetic harmony to bring complex concepts to life." },
+            { num: "03", title: "Social Media Visuals", desc: "Creating dynamic, bite-sized visuals tailored to capture attention and communicate ideas instantly." },
           ].map((item) => (
             <div key={item.num} className="glass-card rounded-xl p-6">
               <span className="text-4xl font-display font-bold text-slate-700/50">{item.num}</span>
