@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { User, GraduationCap, Briefcase, Heart, MapPin, Calendar, Award } from "lucide-react";
+import { User, GraduationCap, Briefcase, Heart, MapPin, Calendar, Zap } from "lucide-react";
 
 const education = [
   {
@@ -107,23 +107,23 @@ export default function AboutMe() {
               <div className="space-y-3 mb-6">
                 <div className="flex items-center gap-2 text-sm text-slate-400 font-sans">
                   <MapPin size={14} className="text-slate-500" />
-                  <span>San Francisco, CA</span>
+                  <span>Chennai, India</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-slate-400 font-sans">
                   <Calendar size={14} className="text-slate-500" />
                   <span>Available for collaborations</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-slate-400 font-sans">
-                  <Award size={14} className="text-slate-500" />
-                  <span>NSF Graduate Research Fellow</span>
+                  <Zap size={14} className="text-slate-500" />
+                  <span>Interests in cognitive and consumer behaviour/span>
                 </div>
               </div>
               <div className="swiss-line mb-6" />
               <p className="text-slate-400 text-sm leading-relaxed font-sans">
-                I believe the most interesting problems live at the intersection of disciplines. My work spans computational neuroscience, human-computer interaction, and creative technology — always seeking to build bridges between what we know about the brain and what we can create with code.
+                Hello, I’m Sujal -  a Psychology student but a creative at heart. I believe the most interesting problems live at the intersection of disciplines which drives me to place myself at the intersection of research, design, and storytelling, with experience spanning across various domains. 
               </p>
               <p className="text-slate-400 text-sm leading-relaxed font-sans mt-4">
-                When not in the lab or at the keyboard, you will find me climbing rocks, reading philosophy, or experimenting with generative art.
+                When not in the lab or at the keyboard, you will find me running, cooking, or experimenting with different art mediums.
               </p>
             </div>
           </motion.div>
