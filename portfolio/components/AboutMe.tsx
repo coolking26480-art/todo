@@ -120,7 +120,7 @@ export default function AboutMe() {
               </div>
               <div className="swiss-line mb-6" />
               <p className="text-slate-400 text-sm leading-relaxed font-sans">
-                Hello, I’m Sujal -  a Psychology student but a creative at heart. I believe the most interesting problems live at the intersection of disciplines which drives me to place myself at the intersection of research, design, and storytelling, with experience spanning across various domains. 
+                A Psychology student and a creative at heart, I believe the most interesting problems live at the intersection of disciplines. This drives me to position myself at the crossroads of research, design, and storytelling. With experience spanning diverse domains, I leverage a deep understanding of human behavior to craft intuitive, impactful digital experiences and narratives. 
               </p>
               <p className="text-slate-400 text-sm leading-relaxed font-sans mt-4">
                 When not in the lab or at the keyboard, you will find me running, cooking, or experimenting with different art mediums.
