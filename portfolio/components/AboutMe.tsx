@@ -5,37 +5,49 @@ import { User, GraduationCap, Briefcase, Heart, MapPin, Calendar, Award } from "
 
 const education = [
   {
-    degree: "M.S. in Computational Neuroscience",
-    institution: "Stanford University",
-    period: "2023 — 2025",
-    details: "Thesis on neural manifold geometry and representational learning in prefrontal cortex.",
+    degree: "B. A. (Hons.)  in Psychology",
+    institution: "FLAME University, Pune",
+    period: "2022 — 2026",
+    details: "Dissertation on The Impact of Auditory Tempo on Consumer Impulsivity.
+",
   },
   {
-    degree: "B.S. in Computer Science & Cognitive Science",
-    institution: "MIT",
-    period: "2019 — 2023",
-    details: "Double major with focus on machine learning and computational cognitive modeling.",
+    degree: "High School Diploma",
+    institution: "Chinmaya Vidyalaya, Chennai (CBSE)",
+    period: "2020 — 2022",
+    details: "Subjects: Biology, Physics, Chemistry, Mathematics, English
+",
   },
 ];
 
 const experience = [
   {
-    role: "Research Intern",
-    company: "Allen Institute for Brain Science",
-    period: "Summer 2024",
-    description: "Developed analysis pipelines for large-scale calcium imaging datasets. Built visualization tools for neural population dynamics.",
+    role: "Content creator",
+    company: "The Artistree Studio, Chennai",
+    period: "April 2026 – June 2026",
+    description: "Conceptualized and produced digital and print marketing assets, including social media campaigns, brochures, and promotional materials for diverse client requirements using creative platforms such as Canva pro and Figma. 
+",
   },
   {
-    role: "UX Design Intern",
-    company: "Neuralink",
-    period: "Summer 2023",
-    description: "Designed clinical interface prototypes for neural signal monitoring systems. Conducted usability studies with neurosurgeons.",
+    role: " Research Intern (Psychology)",
+    company: "JOGO Healthcare",
+    period: "May 2025 – June 2025",
+    description: "Developed and administered multi-group survey instruments targeting 250+ patients and external referring doctors. Collected and analyzed qualitative and quantitative data to evaluate therapy adherence and service satisfaction across participant and doctor groups. Authored research report proposing data-driven improvements to patient engagement strategies and dropout intervention touchpoints.
+",
   },
   {
-    role: "Software Engineering Intern",
-    company: "Google Research",
-    period: "Summer 2022",
-    description: "Worked on large language model interpretability tools. Built interactive dashboards for attention pattern visualization.",
+    role: "Head of Design",
+    company: "Animal Welfare Committee, Pune",
+    period: "August 2023 – April 2025",
+    description: "Produced 50+ posters and video assets; managed the organisation’s social media accounts.Led a team of 6 designers and mediated 15+ interviews and meetings with potential rescue animal adopters.
+",
+  },
+   {
+    role: "Operations Intern",
+    company: "Lalchand Bhimraj Group, Chennai",
+    period: "May 2024 – July 2024",
+    description: "Organised inventory inflow and outflow, maintaining accurate stock records. Moderated transactions generating revenue of INR 5M+; reconciled financial ledgers and bank transaction statements.
+",
   },
 ];
 
