@@ -115,7 +115,7 @@ export default function AboutMe() {
                 </div>
                 <div className="flex items-center gap-2 text-sm text-slate-400 font-sans">
                   <Zap size={14} className="text-slate-500" />
-                  <span>Interests in cognitive and consumer behaviour/span>
+                  <span>Interests in cognitive and consumer behaviour</span>
                 </div>
               </div>
               <div className="swiss-line mb-6" />
