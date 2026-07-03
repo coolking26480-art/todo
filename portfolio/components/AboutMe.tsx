@@ -5,18 +5,16 @@ import { User, GraduationCap, Briefcase, Heart, MapPin, Calendar, Award } from "
 
 const education = [
   {
-    degree: "B. A. (Hons.)  in Psychology",
+    degree: "B. A. (Hons.) in Psychology",
     institution: "FLAME University, Pune",
     period: "2022 — 2026",
-    details: "Dissertation on The Impact of Auditory Tempo on Consumer Impulsivity.
-",
+    details: "Dissertation on The Impact of Auditory Tempo on Consumer Impulsivity.",
   },
   {
     degree: "High School Diploma",
     institution: "Chinmaya Vidyalaya, Chennai (CBSE)",
     period: "2020 — 2022",
-    details: "Subjects: Biology, Physics, Chemistry, Mathematics, English
-",
+    details: "Subjects: Biology, Physics, Chemistry, Mathematics, English",
   },
 ];
 
@@ -25,22 +23,19 @@ const experience = [
     role: "Content creator",
     company: "The Artistree Studio, Chennai",
     period: "April 2026 – June 2026",
-    description: "Conceptualized and produced digital and print marketing assets, including social media campaigns, brochures, and promotional materials for diverse client requirements using creative platforms such as Canva pro and Figma. 
-",
+    description: "Conceptualized and produced digital and print marketing assets, including social media campaigns, brochures, and promotional materials for diverse client requirements using creative platforms such as Canva pro and Figma.",
   },
   {
-    role: " Research Intern (Psychology)",
+    role: "Research Intern (Psychology)",
     company: "JOGO Healthcare",
     period: "May 2025 – June 2025",
-    description: "Developed and administered multi-group survey instruments targeting 250+ patients and external referring doctors. Collected and analyzed qualitative and quantitative data to evaluate therapy adherence and service satisfaction across participant and doctor groups. Authored research report proposing data-driven improvements to patient engagement strategies and dropout intervention touchpoints.
-",
+    description: "Developed and administered multi-group survey instruments targeting 250+ patients and external referring doctors. Collected and analyzed qualitative and quantitative data to evaluate therapy adherence and service satisfaction across participant and doctor groups. Authored research report proposing data-driven improvements to patient engagement strategies and dropout intervention touchpoints.",
   },
   {
     role: "Head of Design",
     company: "Animal Welfare Committee, Pune",
     period: "August 2023 – April 2025",
-    description: "Produced 50+ posters and video assets; managed the organisation’s social media accounts.Led a team of 6 designers and mediated 15+ interviews and meetings with potential rescue animal adopters.
-",
+    description: "Produced 50+ posters and video assets; managed the organisation’s social media accounts.Led a team of 6 designers and mediated 15+ interviews and meetings with potential rescue animal adopters.",
   },
 ];
 
