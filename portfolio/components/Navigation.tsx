@@ -13,7 +13,7 @@ const navItems = [
   { id: "home", label: "Home", icon: Brain },
   { id: "about", label: "About Me", icon: User },
   { id: "design", label: "Design", icon: Palette },
-  { id: "code", label: "Code", icon: Code2 },
+  { id: "code", label: "Neuro Projects", icon: Code2 },
   { id: "substack", label: "Substack", icon: BookOpen },
  ];
 
