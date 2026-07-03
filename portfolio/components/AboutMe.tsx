@@ -42,13 +42,6 @@ const experience = [
     description: "Produced 50+ posters and video assets; managed the organisation’s social media accounts.Led a team of 6 designers and mediated 15+ interviews and meetings with potential rescue animal adopters.
 ",
   },
-   {
-    role: "Operations Intern",
-    company: "Lalchand Bhimraj Group, Chennai",
-    period: "May 2024 – July 2024",
-    description: "Organised inventory inflow and outflow, maintaining accurate stock records. Moderated transactions generating revenue of INR 5M+; reconciled financial ledgers and bank transaction statements.
-",
-  },
 ];
 
 const interests = [
