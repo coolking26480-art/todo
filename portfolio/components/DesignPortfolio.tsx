@@ -78,11 +78,6 @@ export default function DesignPortfolio() {
           </p>
         </motion.div>
 
-          <p className="mt-4 text-slate-400 max-w-2xl font-sans text-base leading-relaxed">
-            Crafting visual experiences that bridge the gap between complex scientific concepts and human intuition.
-          </p>
-        </motion.div>
-
         {/* Portfolio PDF Button — top right */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -103,8 +98,6 @@ export default function DesignPortfolio() {
             <ExternalLink className="w-3.5 h-3.5 text-white/40 group-hover:text-biolum-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
           </a>
         </motion.div>
-
-        {/* Swiss Grid Layout */}
 
         {/* Swiss Grid Layout */}
         <motion.div
