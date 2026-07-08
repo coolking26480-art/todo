@@ -20,10 +20,10 @@ const navItems = [
 export default function Navigation({ activeView, onNavigate }: NavigationProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
-    return (
+  return (
     <nav className="fixed top-5 left-0 right-0 z-50 flex justify-center px-4">
       <div className="w-full max-w-5xl">
-        <div className="flex items-center justify-between h-12 px-2 rounded-full bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.05)]">
+        <div className="flex items-center justify-between h-14 px-2 rounded-full bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.05)]">
           
           {/* Logo — compact, left side */}
           <motion.button
@@ -40,8 +40,8 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
             </span>
           </motion.button>
 
-          {/* Nav Items — center cluster */}
-          <div className="hidden md:flex items-center gap-0.5">
+          {/* Nav Items — right aligned */}
+          <div className="hidden md:flex items-center gap-0.5 ml-auto">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeView === item.id;
@@ -49,7 +49,7 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
                 <motion.button
                   key={item.id}
                   onClick={() => onNavigate(item.id)}
-                  className={`relative px-4 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 flex items-center gap-1.5 ${
+                  className={`relative px-4 py-2 rounded-full text-xs font-medium transition-colors duration-200 flex items-center gap-1.5 ${
                     isActive
                       ? "text-biolum-300"
                       : "text-white/50 hover:text-white/90"
@@ -71,17 +71,9 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
             })}
           </div>
 
-          {/* Right side — CTA or icon */}
-          <div className="flex items-center gap-2 pr-3">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="hidden sm:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/[0.06] border border-white/[0.1] text-xs font-medium text-white/80 hover:text-white hover:bg-white/[0.1] transition-colors"
-            >
-              <span>Contact</span>
-            </motion.button>
-            
-            {/* Mobile menu */}
+          {/* Right side — mobile menu only */}
+          <div className="flex items-center pr-3">
+            {/* Mobile menu toggle */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="md:hidden p-1.5 rounded-full text-white/50 hover:text-white hover:bg-white/5 transition-colors"
