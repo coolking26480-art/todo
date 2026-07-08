@@ -8,7 +8,7 @@ interface VideoSynapseProps {
 
 // Interaction zone (same as old particle system)
 const GAP_CENTER = { x: 0.5, y: 0.5 };
-const GAP_RADIUS = 0.25; // slightly larger than old 0.12 for better feel
+const GAP_RADIUS = 0.35; // slightly larger than old 0.12 for better feel
 
 export default function VideoSynapse({ videoSrc }: VideoSynapseProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
