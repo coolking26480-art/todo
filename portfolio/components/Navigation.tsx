@@ -73,10 +73,6 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
 
           {/* Right side — CTA or icon */}
           <div className="flex items-center gap-2 pr-3">
-            
-              <span>Contact</span>
-            </motion.button>
-            
             {/* Mobile menu */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
