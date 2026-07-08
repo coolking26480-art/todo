@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Terminal, GitBranch, Star, ExternalLink, Cpu, Database, FlaskConical } from "lucide-react";
+import { Terminal, GitBranch, Star, ExternalLink, Cpu, Database, FlaskConical, Github } from "lucide-react";
 
 const projects = [
   {
@@ -26,7 +26,7 @@ const projects = [
   },
   {
     id: 3,
-    title: "SynapticML",
+    title: "Alzheimers Prediction Model",
     description: "Machine learning toolkit for predicting synaptic plasticity patterns from calcium imaging data. Implements custom graph neural networks for connectome analysis.",
     tech: ["Python", "PyTorch", "PyTorch Geometric", "WandB", "Docker"],
     stats: { stars: 312, forks: 67 },
@@ -69,15 +69,36 @@ export default function CodeProjects() {
           <div className="flex items-center gap-3 mb-4">
             <Terminal className="w-6 h-6 text-biolum-400" />
             <span className="font-mono text-sm text-biolum-400 tracking-wider uppercase">
-              Research & Python
+              Research & Engineering
             </span>
           </div>
           <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight">
-            Code <span className="text-slate-600">Projects</span>
+            AI/ML <span className="text-slate-600">Projects</span>
           </h2>
           <p className="mt-4 text-slate-400 max-w-2xl font-mono text-sm leading-relaxed">
             Open-source tools and research frameworks at the intersection of computational neuroscience and machine learning.
           </p>
+        </motion.div>
+
+        {/* GitHub Profile Button — top right */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+          className="flex justify-end mb-8"
+        >
+          <a
+            href="https://github.com/sujal03-04"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.05)] hover:bg-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
+          >
+            <Github className="w-4 h-4 text-biolum-300" />
+            <span className="text-sm font-medium text-white/80 group-hover:text-white transition-colors">
+              View GitHub Profile
+            </span>
+            <ExternalLink className="w-3.5 h-3.5 text-white/40 group-hover:text-biolum-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+          </a>
         </motion.div>
 
         {/* Projects Grid */}
@@ -159,7 +180,7 @@ export default function CodeProjects() {
             <span className="ml-2 text-slate-600">bash — 80x24</span>
           </div>
           <div className="text-slate-400">
-            <span className="text-green-400">$</span> git clone https://github.com/sujaljain/neuro-research.git
+            <span className="text-green-400">$</span> git clone https://github.com/sujal03-04/neuro-research.git
           </div>
           <div className="text-slate-400 mt-1">
             <span className="text-green-400">$</span> cd neuro-research && pip install -r requirements.txt
