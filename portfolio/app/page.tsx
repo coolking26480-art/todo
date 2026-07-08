@@ -25,7 +25,7 @@ export default function Portfolio() {
     setActiveView(view as ViewType);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-
+  
   const renderView = () => {
     switch (activeView) {
       case "home":
@@ -39,10 +39,10 @@ export default function Portfolio() {
       case "about":
         return <AboutMe />;
       default:
-        return <HomePage />;
+        return <HomePage onNavigate={handleNavigate} />;
     }
   };
-
+  
   return (
     <main className="relative min-h-screen">
       {/* Global Background Layer */}
