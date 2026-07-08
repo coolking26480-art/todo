@@ -73,6 +73,14 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
 
           {/* Right side — CTA or icon */}
           <div className="flex items-center gap-2 pr-3">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="hidden sm:flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/[0.06] border border-white/[0.1] text-xs font-medium text-white/80 hover:text-white hover:bg-white/[0.1] transition-colors"
+            >
+              <span>Contact</span>
+            </motion.button>
+            
             {/* Mobile menu */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -122,3 +130,4 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
       </AnimatePresence>
     </nav>
   );
+}
