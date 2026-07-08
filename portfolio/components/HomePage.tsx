@@ -8,7 +8,9 @@ import { Mail, Github, Linkedin, Twitter, ArrowDown } from "lucide-react";
 
 interface HomePageProps {
   onNavigate: (view: string) => void;
-}export default function HomePage() {
+}
+
+export default function HomePage({ onNavigate }: HomePageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -33,7 +35,7 @@ interface HomePageProps {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1024px"
             />
             {/* Video interaction overlay */}
-            <VideoSynapse videoSrc="/images/Synapse.mp4" />
+            <VideoSynapse videoSrc="/videos/synapse.mp4" />
           </div>
 
           {/* Floating hint */}
@@ -75,7 +77,7 @@ interface HomePageProps {
           </motion.div>
         </motion.div>
 
-        {/* Scroll indicator */}
+        {/* Scroll indicator — clickable, navigates to About */}
         <motion.button
           onClick={() => onNavigate("about")}
           initial={{ opacity: 0 }}
@@ -104,14 +106,14 @@ interface HomePageProps {
             </div>
             <div className="flex items-center gap-4">
               <a
-                href="mailto:sujal@example.com"
+                href="mailto:sujal0322@gamil.com"
                 className="p-2 rounded-lg text-slate-400 hover:text-biolum-300 hover:bg-white/5 transition-all duration-200"
                 aria-label="Email"
               >
                 <Mail size={18} />
               </a>
               <a
-                href="https://github.com"
+                href="https://github.com/sujal03-04"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-lg text-slate-400 hover:text-biolum-300 hover:bg-white/5 transition-all duration-200"
@@ -120,7 +122,7 @@ interface HomePageProps {
                 <Github size={18} />
               </a>
               <a
-                href="https://linkedin.com"
+                href="www.linkedin.com/in/sujal-j"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-lg text-slate-400 hover:text-biolum-300 hover:bg-white/5 transition-all duration-200"
