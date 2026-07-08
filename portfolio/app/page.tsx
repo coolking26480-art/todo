@@ -44,7 +44,7 @@ export default function Portfolio() {
   };
 
   return (
-    <main className={`relative ${activeView === "home" ? "h-screen overflow-hidden" : "min-h-screen"}`}>
+    <main className="relative min-h-screen">
       {/* Global Background Layer */}
       <div className="fixed inset-0 z-0">
         <Image
