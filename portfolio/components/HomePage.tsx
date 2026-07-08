@@ -6,7 +6,9 @@ import Image from "next/image";
 import VideoSynapse from "./VideoSynapse";
 import { Mail, Github, Linkedin, Twitter, ArrowDown } from "lucide-react";
 
-export default function HomePage() {
+interface HomePageProps {
+  onNavigate: (view: string) => void;
+}export default function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -74,14 +76,17 @@ export default function HomePage() {
         </motion.div>
 
         {/* Scroll indicator */}
-        <motion.div
+        <motion.button
+          onClick={() => onNavigate("about")}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.8 }}
-          className="mt-12 animate-bounce"
+          className="mt-12 animate-bounce cursor-pointer hover:text-biolum-400 transition-colors"
+          whileHover={{ scale: 1.2 }}
+          whileTap={{ scale: 0.9 }}
         >
-          <ArrowDown className="w-5 h-5 text-slate-600" />
-        </motion.div>
+          <ArrowDown className="w-5 h-5 text-slate-600 hover:text-biolum-400 transition-colors" />
+        </motion.button>
       </div>
 
       {/* Footer */}
