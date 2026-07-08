@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import NeuronCanvas from "./NeuronCanvas";
+import VideoSynapse from "./VideoSynapse";
 import { Mail, Github, Linkedin, Twitter, ArrowDown } from "lucide-react";
 
 export default function HomePage() {
@@ -13,16 +13,15 @@ export default function HomePage() {
     <div className="min-h-screen flex flex-col relative">
       {/* Main Content */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 pb-12">
-        {/* Neuron Image with Canvas Overlay */}
+        {/* Neuron Image with Video Overlay */}
         <motion.div
-          ref={containerRef}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative w-full max-w-4xl mx-auto"
         >
-          <div className="relative aspect-[16/9] w-full">
-            {/* Background Image */}
+          <div ref={containerRef} className="relative aspect-[16/9] w-full">
+            {/* Static fallback image — always visible underneath */}
             <Image
               src="/images/neurons.png"
               alt="Neural Synapse Connection"
@@ -31,8 +30,8 @@ export default function HomePage() {
               className="object-contain neuron-glow"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1024px"
             />
-            {/* Interactive Canvas Overlay */}
-            <NeuronCanvas containerRef={containerRef} />
+            {/* Video interaction overlay */}
+            <VideoSynapse videoSrc="/videos/synapse.mp4" />
           </div>
 
           {/* Floating hint */}
