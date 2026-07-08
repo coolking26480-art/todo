@@ -35,7 +35,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1024px"
             />
             {/* Video interaction overlay */}
-            <VideoSynapse videoSrc="/videos/synapse.mp4" />
+            <VideoSynapse videoSrc="/images/Synapse.mp4" />
           </div>
 
           {/* Floating hint */}
@@ -83,7 +83,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.8 }}
-          className="mt-12 animate-bounce cursor-pointer hover:text-biolum-400 transition-colors"
+          className="mt-12 animate-bounce cursor-pointer"
           whileHover={{ scale: 1.2 }}
           whileTap={{ scale: 0.9 }}
         >
@@ -122,7 +122,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 <Github size={18} />
               </a>
               <a
-                href="www.linkedin.com/in/sujal-j"
+                href="https://www.linkedin.com/in/sujal-j/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-lg text-slate-400 hover:text-biolum-300 hover:bg-white/5 transition-all duration-200"
