@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState } from "react";
 
 interface VideoSynapseProps {
-  videoSrc: Synapse.mp4; 
+  videoSrc: string; 
 }
 
 // Interaction zone (same as old particle system)
