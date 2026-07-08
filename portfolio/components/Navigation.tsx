@@ -20,27 +20,28 @@ const navItems = [
 export default function Navigation({ activeView, onNavigate }: NavigationProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass-nav">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+    return (
+    <nav className="fixed top-5 left-0 right-0 z-50 flex justify-center px-4">
+      <div className="w-full max-w-5xl">
+        <div className="flex items-center justify-between h-12 px-2 rounded-full bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.05)]">
+          
+          {/* Logo — compact, left side */}
           <motion.button
             onClick={() => onNavigate("home")}
-            className="flex items-center gap-2 group"
+            className="flex items-center gap-2 pl-3 pr-4 group"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-biolum-400 to-biolum-600 flex items-center justify-center">
-              <span className="text-white font-bold text-sm font-display">SJ</span>
+            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-biolum-400 to-biolum-600 flex items-center justify-center">
+              <span className="text-white font-bold text-xs font-display">SJ</span>
             </div>
-            <span className="text-white font-display font-semibold text-lg tracking-wide hidden sm:block">
-              Sujal Jain
+            <span className="text-white/90 font-display font-semibold text-sm tracking-wide hidden sm:block">
+              Sujal
             </span>
           </motion.button>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
+          {/* Nav Items — center cluster */}
+          <div className="hidden md:flex items-center gap-0.5">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeView === item.id;
@@ -48,20 +49,20 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
                 <motion.button
                   key={item.id}
                   onClick={() => onNavigate(item.id)}
-                  className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center gap-2 ${
+                  className={`relative px-4 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 flex items-center gap-1.5 ${
                     isActive
                       ? "text-biolum-300"
-                      : "text-slate-400 hover:text-white"
+                      : "text-white/50 hover:text-white/90"
                   }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Icon size={16} strokeWidth={isActive ? 2.5 : 1.5} />
+                  <Icon size={13} strokeWidth={isActive ? 2.5 : 1.5} />
                   <span>{item.label}</span>
                   {isActive && (
                     <motion.div
                       layoutId="activeNav"
-                      className="absolute inset-0 bg-white/5 rounded-lg border border-white/10"
+                      className="absolute inset-0 bg-white/[0.06] rounded-full border border-white/[0.08]"
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -70,27 +71,34 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
             })}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
-          >
-            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+          {/* Right side — CTA or icon */}
+          <div className="flex items-center gap-2 pr-3">
+            
+              <span>Contact</span>
+            </motion.button>
+            
+            {/* Mobile menu */}
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="md:hidden p-1.5 rounded-full text-white/50 hover:text-white hover:bg-white/5 transition-colors"
+            >
+              {mobileOpen ? <X size={16} /> : <Menu size={16} />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu — full width dropdown below the pill */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden glass-card-strong border-t border-white/5"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="absolute top-20 left-4 right-4 md:hidden rounded-2xl bg-white/[0.03] backdrop-blur-2xl border border-white/[0.08] shadow-2xl overflow-hidden"
           >
-            <div className="px-4 py-4 space-y-1">
+            <div className="p-2 space-y-0.5">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeView === item.id;
@@ -101,13 +109,13 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
                       onNavigate(item.id);
                       setMobileOpen(false);
                     }}
-                    className={`w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center gap-3 ${
+                    className={`w-full px-4 py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center gap-3 ${
                       isActive
-                        ? "text-biolum-300 bg-white/5"
-                        : "text-slate-400 hover:text-white hover:bg-white/5"
+                        ? "text-biolum-300 bg-white/[0.05]"
+                        : "text-white/50 hover:text-white hover:bg-white/[0.03]"
                     }`}
                   >
-                    <Icon size={18} strokeWidth={isActive ? 2.5 : 1.5} />
+                    <Icon size={16} strokeWidth={isActive ? 2.5 : 1.5} />
                     <span>{item.label}</span>
                   </button>
                 );
@@ -118,4 +126,3 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
       </AnimatePresence>
     </nav>
   );
-}
