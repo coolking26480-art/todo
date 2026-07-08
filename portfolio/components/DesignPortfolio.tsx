@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Palette, Layers, Eye, ArrowUpRight } from "lucide-react";
+import { Palette, Layers, Eye, ArrowUpRight, FileText, ExternalLink } from "lucide-react";
 
 const designs = [
   {
@@ -77,6 +77,34 @@ export default function DesignPortfolio() {
             Crafting visual experiences that bridge the gap between complex scientific concepts and human intuition.
           </p>
         </motion.div>
+
+          <p className="mt-4 text-slate-400 max-w-2xl font-sans text-base leading-relaxed">
+            Crafting visual experiences that bridge the gap between complex scientific concepts and human intuition.
+          </p>
+        </motion.div>
+
+        {/* Portfolio PDF Button — top right */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+          className="flex justify-end mb-8"
+        >
+          <a
+            href="https://canva.link/v78sto24abdtjl9"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-[0_4px_20px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.05)] hover:bg-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
+          >
+            <FileText className="w-4 h-4 text-biolum-300" />
+            <span className="text-sm font-medium text-white/80 group-hover:text-white transition-colors">
+              View Full Portfolio
+            </span>
+            <ExternalLink className="w-3.5 h-3.5 text-white/40 group-hover:text-biolum-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+          </a>
+        </motion.div>
+
+        {/* Swiss Grid Layout */}
 
         {/* Swiss Grid Layout */}
         <motion.div
