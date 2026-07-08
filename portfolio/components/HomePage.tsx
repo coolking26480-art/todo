@@ -1,132 +1,202 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Image from "next/image";
-import VideoSynapse from "./VideoSynapse";
-import { Mail, Github, Linkedin, Twitter } from "lucide-react";
+import { useRef, useEffect, useState } from "react";
 
-export default function HomePage() {
+interface VideoSynapseProps {
+  videoSrc: string; 
+}
+
+// Interaction zone (same as old particle system)
+const GAP_CENTER = { x: 0.5, y: 0.5 };
+const GAP_RADIUS = 0.35; // slightly larger than old 0.12 for better feel
+
+export default function VideoSynapse({ videoSrc }: VideoSynapseProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mouseRef = useRef({ x: -1000, y: -1000 });
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [useFallback, setUseFallback] = useState(false);
+  const rafRef = useRef<number>(0);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    const container = containerRef.current;
+    if (!video || !container) return;
+
+    // Preload video metadata
+    video.load();
+
+    const handleLoaded = () => setVideoLoaded(true);
+    video.addEventListener("loadedmetadata", handleLoaded);
+
+    // Track mouse position relative to container
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      mouseRef.current = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      };
+    };
+
+    const handleMouseLeave = () => {
+      mouseRef.current = { x: -1000, y: -1000 };
+    };
+
+    container.addEventListener("mousemove", handleMouseMove);
+    container.addEventListener("mouseleave", handleMouseLeave);
+
+    // Animation loop for scrubbing
+    const animate = () => {
+      const rect = container.getBoundingClientRect();
+      const width = rect.width;
+      const height = rect.height;
+
+      const gapX = width * GAP_CENTER.x;
+      const gapY = height * GAP_CENTER.y;
+      const interactRadius = Math.min(width, height) * GAP_RADIUS;
+
+      const mouse = mouseRef.current;
+      const distToGap = Math.sqrt(
+        (mouse.x - gapX) ** 2 + (mouse.y - gapY) ** 2
+      );
+
+      // Normalize distance: 0 = at center, 1 = at edge of radius
+      const proximity = Math.max(0, 1 - distToGap / interactRadius);
+
+      if (video.readyState >= 2) {
+        if (proximity <= 0.05) {
+          // Far away: pause and reset to start (frame 0 = neurons at rest)
+          video.pause();
+          video.currentTime = 0;
+        } else {
+          // Close: scrub forward based on proximity
+          // Closer = faster playback. Range: 0.1x to 1.5x
+          const targetRate = 0.1 + proximity * 1.4;
+          video.playbackRate = targetRate;
+
+          // Only call play() if actually paused
+          if (video.paused) {
+            video.play().catch(() => {
+              // Autoplay blocked or error — fallback to Option B behavior
+              setUseFallback(true);
+            });
+          }
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    rafRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      video.removeEventListener("loadedmetadata", handleLoaded);
+      container.removeEventListener("mousemove", handleMouseMove);
+      container.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [videoSrc]);
+
+  // Fallback: if video scrubbing fails, use opacity crossfade (Option B)
+  if (useFallback) {
+    return <VideoCrossfade videoSrc={videoSrc} />;
+  }
+
   return (
-    <div className="h-screen w-full relative overflow-hidden flex flex-col">
-      {/* Main Content — centered vertically */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-16">
-        
-        {/* Video Container */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative w-full max-w-4xl"
-        >
-          <div className="relative aspect-[16/9] w-full">
-            {/* Static fallback — frame 0 of video */}
-            <Image
-              src="/images/neurons.png"
-              alt="Neural Synapse Connection"
-              fill
-              priority
-              className="object-contain neuron-glow"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1024px"
-            />
-            {/* Video interaction overlay */}
-            <VideoSynapse videoSrc="/videos/Synapse.mp4" />
-          </div>
-
-          {/* Hint */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.5, duration: 0.8 }}
-            className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-slate-500 font-mono tracking-widest uppercase whitespace-nowrap"
-          >
-            Hover the synaptic gap
-          </motion.div>
-        </motion.div>
-
-        {/* Typography — below video */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-center mt-12"
-        >
-          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight">
-            Sujal <span className="text-biolum-400 text-glow">Jain</span>
-          </h1>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            className="mt-3 text-lg sm:text-xl md:text-2xl text-slate-400 font-light tracking-wide"
-          >
-            Researcher <span className="text-slate-600">&</span> Designer
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.9, duration: 0.8 }}
-            className="mt-2 text-sm text-slate-500 font-mono tracking-wider"
-          >
-            Exploring the intersection of neuroscience, code, and creative design
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* Footer — pinned to bottom */}
-      <motion.footer
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.0, duration: 0.8 }}
-        className="absolute bottom-0 left-0 right-0 py-6 px-4 sm:px-6 lg:px-8"
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="swiss-line mb-4" />
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="text-slate-500 text-sm font-mono">
-              <span className="text-slate-600">{"//"}</span> Get in touch
-            </div>
-            <div className="flex items-center gap-4">
-              <a
-                href="mailto:sujal@example.com"
-                className="p-2 rounded-lg text-slate-400 hover:text-biolum-300 hover:bg-white/5 transition-all duration-200"
-                aria-label="Email"
-              >
-                <Mail size={18} />
-              </a>
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg text-slate-400 hover:text-biolum-300 hover:bg-white/5 transition-all duration-200"
-                aria-label="GitHub"
-              >
-                <Github size={18} />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg text-slate-400 hover:text-biolum-300 hover:bg-white/5 transition-all duration-200"
-                aria-label="LinkedIn"
-              >
-                <Linkedin size={18} />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-lg text-slate-400 hover:text-biolum-300 hover:bg-white/5 transition-all duration-200"
-                aria-label="Twitter"
-              >
-                <Twitter size={18} />
-              </a>
-            </div>
-            <div className="text-slate-600 text-xs font-mono">
-              © 2026 Sujal Jain
-            </div>
-          </div>
+    <div
+      ref={containerRef}
+      className="absolute inset-0 z-10 cursor-crosshair"
+    >
+      <video
+        ref={videoRef}
+        src={videoSrc}
+        muted
+        playsInline
+        preload="auto"
+        className={`w-full h-full object-contain transition-opacity duration-300 ${
+          videoLoaded ? "opacity-100" : "opacity-0"
+        }`}
+      />
+      {/* Loading state */}
+      {!videoLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-biolum-400/30 border-t-biolum-400 rounded-full animate-spin" />
         </div>
-      </motion.footer>
+      )}
+    </div>
+  );
+}
+
+// Option B Fallback Component
+function VideoCrossfade({ videoSrc }: { videoSrc: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isNear, setIsNear] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    const container = containerRef.current;
+    if (!video || !container) return;
+
+    video.load();
+    const handleLoaded = () => setVideoLoaded(true);
+    video.addEventListener("loadedmetadata", handleLoaded);
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      const gapX = rect.width * GAP_CENTER.x;
+      const gapY = rect.height * GAP_CENTER.y;
+      const interactRadius = Math.min(rect.width, rect.height) * GAP_RADIUS;
+
+      const dist = Math.sqrt(
+        (e.clientX - rect.left - gapX) ** 2 +
+        (e.clientY - rect.top - gapY) ** 2
+      );
+
+      setIsNear(dist < interactRadius);
+    };
+
+    const handleMouseLeave = () => setIsNear(false);
+
+    container.addEventListener("mousemove", handleMouseMove);
+    container.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      video.removeEventListener("loadedmetadata", handleLoaded);
+      container.removeEventListener("mousemove", handleMouseMove);
+      container.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [videoSrc]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !videoLoaded) return;
+
+    if (isNear) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+      video.currentTime = 0;
+    }
+  }, [isNear, videoLoaded]);
+
+  return (
+    <div
+      ref={containerRef}
+      className="absolute inset-0 z-10 cursor-crosshair"
+    >
+      <video
+        ref={videoRef}
+        src={videoSrc}
+        muted
+        playsInline
+        loop
+        preload="auto"
+        className={`w-full h-full object-contain transition-opacity duration-500 ${
+          isNear && videoLoaded ? "opacity-100" : "opacity-0"
+        }`}
+      />
     </div>
   );
 }
