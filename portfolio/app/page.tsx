@@ -29,7 +29,7 @@ export default function Portfolio() {
   const renderView = () => {
     switch (activeView) {
       case "home":
-        return <HomePage />;
+        return <HomePage onNavigate={handleNavigate} />;
       case "code":
         return <CodeProjects />;
       case "design":
