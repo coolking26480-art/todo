@@ -20,18 +20,23 @@ export default function HomePage() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative w-full max-w-4xl mx-auto"
         >
-          <div ref={containerRef} className="relative aspect-[16/9] w-full">
-            {/* Static fallback image — always visible underneath */}
-            <Image
-              src="/images/neurons.png"
-              alt="Neural Synapse Connection"
-              fill
-              priority
-              className="object-contain neuron-glow"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1024px"
-            />
-            {/* Video interaction overlay */}
-            <VideoSynapse videoSrc="/images/Synapse.mp4" />
+          {/* UPDATED: Added `p-8 -m-8` to create a wider invisible hover/trigger padding 
+            around the synapse image without shifting surrounding elements.
+          */}
+          <div ref={containerRef} className="relative aspect-[16/9] w-full p-8 -m-8">
+            <div className="relative w-full h-full">
+              {/* Static fallback image — always visible underneath */}
+              <Image
+                src="/images/neurons.png"
+                alt="Neural Synapse Connection"
+                fill
+                priority
+                className="object-contain neuron-glow"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1024px"
+              />
+              {/* Video interaction overlay */}
+              <VideoSynapse videoSrc="/images/Synapse.mp4" />
+            </div>
           </div>
 
           {/* Floating hint */}
@@ -39,7 +44,7 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5, duration: 0.8 }}
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-slate-500 font-mono tracking-widest uppercase"
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-slate-500 font-mono tracking-widest uppercase pointer-events-none"
           >
             Hover the synaptic gap
           </motion.div>
