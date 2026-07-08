@@ -31,7 +31,7 @@ export default function HomePage() {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1024px"
             />
             {/* Video interaction overlay */}
-            <VideoSynapse videoSrc="/videos/Synapse.mp4" />
+            <VideoSynapse videoSrc="/images/Synapse.mp4" />
           </div>
 
           {/* Floating hint */}
