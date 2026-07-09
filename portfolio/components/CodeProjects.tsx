@@ -59,14 +59,28 @@ export default function CodeProjects() {
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-                  {/* Title row — title left, button right */}
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-12"
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <Terminal className="w-6 h-6 text-biolum-400" />
+            <span className="font-mono text-sm text-biolum-400 tracking-wider uppercase">
+              Research & Engineering
+            </span>
+          </div>
+
+          {/* Title row — title left, button right */}
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
             <div>
               <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight">
                 AI/ML <span className="text-slate-600">Projects</span>
               </h2>
               <p className="mt-4 text-slate-400 max-w-2xl font-mono text-sm leading-relaxed">
-                Open-source tools and research frameworks...
+                Open-source tools and research frameworks at the intersection of computational neuroscience and machine learning.
               </p>
             </div>
 
@@ -86,6 +100,7 @@ export default function CodeProjects() {
               <ExternalLink className="w-3.5 h-3.5 text-white/40 group-hover:text-biolum-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
             </motion.a>
           </div>
+        </motion.div>
         
         {/* Projects Grid */}
         <motion.div
