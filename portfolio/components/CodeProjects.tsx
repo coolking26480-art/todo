@@ -6,9 +6,10 @@ import { Terminal, GitBranch, Star, ExternalLink, Cpu, Database, FlaskConical, G
 const projects = [
   {
     id: 1,
-    title: "NeuroSynapse Simulator",
-    description: "A high-performance Python framework for simulating biologically accurate neural network dynamics using Hodgkin-Huxley models and stochastic differential equations.",
-    tech: ["Python", "NumPy", "SciPy", "Matplotlib", "Cython"],
+    title: "Brain MRI Tumor CNN",
+    description: "CNN built from scratch in PyTorch for 4-class brain tumor classification from MRI scans, with Grad-CAM explainability. 90% test accuracy.",
+    tech: ["Python", "NumPy", "Matplotlib", "CNN"],  
+grad-cam, computer-vision
     stats: { stars: 234, forks: 45 },
     icon: Cpu,
     color: "from-emerald-500/20 to-teal-500/20",
@@ -16,9 +17,9 @@ const projects = [
   },
   {
     id: 2,
-    title: "CortexData Pipeline",
-    description: "End-to-end ETL pipeline for processing multi-modal neuroimaging datasets (fMRI, EEG, MEG) with automated preprocessing, artifact removal, and feature extraction.",
-    tech: ["Python", "Pandas", "Apache Spark", "Dask", "BIDS"],
+    title: "EEG Seizure LSTM",
+    description: "Bidirectional LSTM for 5-class EEG seizure classification developed using Epileptic Seizure Recognition dataset (Andrzejak et al., UCI/GitHub mirror). Diagnosed and fixed gradient explosion mode collapse. 94% seizure recall.",
+    tech: ["Python", "Pandas", "pytorch", "LSTM"],
     stats: { stars: 189, forks: 32 },
     icon: Database,
     color: "from-blue-500/20 to-cyan-500/20",
@@ -26,9 +27,9 @@ const projects = [
   },
   {
     id: 3,
-    title: "Alzheimers Prediction Model",
-    description: "Machine learning toolkit for predicting synaptic plasticity patterns from calcium imaging data. Implements custom graph neural networks for connectome analysis.",
-    tech: ["Python", "PyTorch", "PyTorch Geometric", "WandB", "Docker"],
+    title: "Alzheimer's Risk Classifier",
+    description: "Random Forest classifier predicting Alzheimer's diagnosis from clinical data. Trained on 2,149 patient records (El Kharoua, 2024, Kaggle) and projects 93% test accuracy.",
+    tech: ["Python", "Random-Forest", "Scikit-Learn"],
     stats: { stars: 312, forks: 67 },
     icon: FlaskConical,
     color: "from-purple-500/20 to-pink-500/20",
