@@ -8,8 +8,7 @@ const projects = [
     id: 1,
     title: "Brain MRI Tumor CNN",
     description: "CNN built from scratch in PyTorch for 4-class brain tumor classification from MRI scans, with Grad-CAM explainability. 90% test accuracy.",
-    tech: ["Python", "NumPy", "Matplotlib", "CNN"],  
-grad-cam, computer-vision
+    tech: ["Python", "NumPy", "Matplotlib", "CNN", "Grad-CAM"],  
     stats: { stars: 234, forks: 45 },
     icon: Cpu,
     color: "from-emerald-500/20 to-teal-500/20",
@@ -19,7 +18,7 @@ grad-cam, computer-vision
     id: 2,
     title: "EEG Seizure LSTM",
     description: "Bidirectional LSTM for 5-class EEG seizure classification developed using Epileptic Seizure Recognition dataset (Andrzejak et al., UCI/GitHub mirror). Diagnosed and fixed gradient explosion mode collapse. 94% seizure recall.",
-    tech: ["Python", "Pandas", "pytorch", "LSTM"],
+    tech: ["Python", "Pandas", "Pytorch", "LSTM"],
     stats: { stars: 189, forks: 32 },
     icon: Database,
     color: "from-blue-500/20 to-cyan-500/20",
