@@ -13,6 +13,7 @@ const projects = [
     icon: Cpu,
     color: "from-emerald-500/20 to-teal-500/20",
     borderColor: "border-emerald-500/30",
+    link: "https://github.com/sujal03-04/Tumor-Classifier-CNN-Model.git",
   },
   {
     id: 2,
@@ -23,6 +24,7 @@ const projects = [
     icon: Database,
     color: "from-blue-500/20 to-cyan-500/20",
     borderColor: "border-blue-500/30",
+    link: "https://github.com/sujal03-04/EEG-Seizure-LSTM-Model.git",
   },
   {
     id: 3,
@@ -33,6 +35,7 @@ const projects = [
     icon: FlaskConical,
     color: "from-purple-500/20 to-pink-500/20",
     borderColor: "border-purple-500/30",
+    link: "https://github.com/sujal03-04/Alzheimers-Risk-Prediction-Model.git",
   },
 ];
 
@@ -59,7 +62,7 @@ export default function CodeProjects() {
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-                {/* Header */}
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -112,11 +115,14 @@ export default function CodeProjects() {
           {projects.map((project) => {
             const Icon = project.icon;
             return (
-              <motion.div
+              <motion.a
                 key={project.id}
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
                 variants={itemVariants}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className={`terminal-card rounded-xl p-6 group cursor-pointer hover:border-slate-500/50 transition-colors duration-300 ${project.borderColor}`}
+                className={`terminal-card rounded-xl p-6 group cursor-pointer hover:border-slate-500/50 transition-colors duration-300 ${project.borderColor} block no-underline`}
               >
                 {/* Card Header */}
                 <div className="flex items-start justify-between mb-4">
@@ -162,7 +168,7 @@ export default function CodeProjects() {
                   <span>View Repository</span>
                   <ExternalLink size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-              </motion.div>
+              </motion.a>
             );
           })}
         </motion.div>
