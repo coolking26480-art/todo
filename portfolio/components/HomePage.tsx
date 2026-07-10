@@ -22,9 +22,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative w-full max-w-4xl mx-auto"
+          className="relative w-full max-w-3xl mx-auto"
         >
-          <div ref={containerRef} className="relative aspect-[16/9] w-full rounded-4xl overflow-hidden">
+          <div ref={containerRef} className="relative aspect-[16/9] w-full rounded-3xl overflow-hidden">
             {/* Static fallback image — always visible underneath */}
             <Image
               src="/images/neurons.png"
