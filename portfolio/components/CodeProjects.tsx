@@ -30,7 +30,7 @@ const projects = [
     id: 3,
     title: "Alzheimer's Risk Classifier",
     description: "Random Forest classifier predicting Alzheimer's diagnosis from clinical data. Trained on 2,149 patient records (El Kharoua, 2024, Kaggle) and projects 93% test accuracy.",
-    tech: ["Python", "Random-Forest", "Scikit-Learn"],
+    tech: ["Python", "Random-Forest", "Scikit-Learn", "Hugging Face Deployment"],
     stats: { stars: 312, forks: 67 },
     icon: FlaskConical,
     color: "from-purple-500/20 to-pink-500/20",
