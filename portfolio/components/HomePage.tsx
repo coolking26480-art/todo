@@ -54,7 +54,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-center mt-4 sm:mt-6"
+          className="text-center mt-6 sm:mt-9"
         >
           <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight">
             Sujal <span className="text-biolum-400 text-glow">Jain</span>
@@ -63,7 +63,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="mt-3 text-lg sm:text-xl md:text-2xl text-slate-400 font-light tracking-wide"
+            className="mt-3 text-lg sm:text-xl md:text-2xl text-slate-200 font-light tracking-wide"
           >
             Researcher <span className="text-slate-600">&</span> Designer
           </motion.p>
@@ -71,7 +71,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.9, duration: 0.8 }}
-            className="mt-2 text-sm text-slate-500 font-mono tracking-wider"
+            className="mt-2 text-sm text-slate-300 font-mono tracking-wider"
           >
             Exploring the intersection of neuroscience, code, and creative design
           </motion.div>
