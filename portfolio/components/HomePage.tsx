@@ -73,7 +73,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             transition={{ delay: 0.9, duration: 0.8 }}
             className="mt-2 text-sm text-slate-300 font-mono tracking-wider"
           >
-            Exploring the intersection of neuroscience, code, and creative design
+            Exploring the intersection of neuro/cognitive science, coding, and creative design
           </motion.div>
         </motion.div>
 
@@ -96,7 +96,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.0, duration: 0.8 }}
-        className="w-full py-4 px-4 sm:px-6 lg:px-8"
+        className="w-full py-2 px-4 sm:px-6 lg:px-8"
       >
         <div className="max-w-7xl mx-auto">
           <div className="swiss-line mb-4" />
