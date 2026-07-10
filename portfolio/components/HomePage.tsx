@@ -16,7 +16,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   return (
     <div className="min-h-screen flex flex-col relative">
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 pb-12">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-8 pb-6">
         {/* Neuron Image with Video Overlay */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -24,7 +24,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative w-full max-w-3xl mx-auto"
         >
-          <div ref={containerRef} className="relative aspect-[16/9] w-full rounded-3xl overflow-hidden">
+          <div ref={containerRef} className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden">
             {/* Static fallback image — always visible underneath */}
             <Image
               src="/images/neurons.png"
@@ -54,7 +54,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-center mt-8 sm:mt-12"
+          className="text-center mt-4 sm:mt-6"
         >
           <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight">
             Sujal <span className="text-biolum-400 text-glow">Jain</span>
@@ -63,7 +63,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="mt-4 text-lg sm:text-xl md:text-2xl text-slate-400 font-light tracking-wide"
+            className="mt-3 text-lg sm:text-xl md:text-2xl text-slate-400 font-light tracking-wide"
           >
             Researcher <span className="text-slate-600">&</span> Designer
           </motion.p>
@@ -71,7 +71,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.9, duration: 0.8 }}
-            className="mt-3 text-sm text-slate-500 font-mono tracking-wider"
+            className="mt-2 text-sm text-slate-500 font-mono tracking-wider"
           >
             Exploring the intersection of neuroscience, code, and creative design
           </motion.div>
@@ -83,7 +83,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.8 }}
-          className="mt-12 animate-bounce cursor-pointer"
+          className="mt-6 animate-bounce cursor-pointer"
           whileHover={{ scale: 1.2 }}
           whileTap={{ scale: 0.9 }}
         >
@@ -96,10 +96,10 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.0, duration: 0.8 }}
-        className="w-full py-8 px-4 sm:px-6 lg:px-8"
+        className="w-full py-4 px-4 sm:px-6 lg:px-8"
       >
         <div className="max-w-7xl mx-auto">
-          <div className="swiss-line mb-6" />
+          <div className="swiss-line mb-4" />
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-slate-500 text-sm font-mono">
               <span className="text-slate-600">{"//"}</span> Get in touch
