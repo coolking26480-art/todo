@@ -146,4 +146,4 @@ export default function BrainGlobe() {
       </div>
     </div>
   );
-}F
+}
