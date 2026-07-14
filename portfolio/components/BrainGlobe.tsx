@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Spline from "@splinetool/react-spline/next";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface BrainRegion {
@@ -20,13 +19,11 @@ const regions: BrainRegion[] = [
 
 export default function BrainGlobe() {
   const [hoveredRegion, setHoveredRegion] = useState<BrainRegion | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [activeRegionIndex, setActiveRegionIndex] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  // Auto-cycle through regions when idle
+  // Auto-cycle through regions
   useEffect(() => {
-    if (!isLoaded) return;
-
     const interval = setInterval(() => {
       if (!hoveredRegion) {
         setActiveRegionIndex((prev) => (prev + 1) % regions.length);
@@ -36,11 +33,7 @@ export default function BrainGlobe() {
     }, 6000);
 
     return () => clearInterval(interval);
-  }, [isLoaded, hoveredRegion, activeRegionIndex]);
-
-  const handleLoad = useCallback(() => {
-    setIsLoaded(true);
-  }, []);
+  }, [hoveredRegion, activeRegionIndex]);
 
   const handleRegionHover = useCallback((region: BrainRegion | null) => {
     setHoveredRegion(region);
@@ -62,23 +55,27 @@ export default function BrainGlobe() {
         <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.15)_50%)] bg-[length:100%_4px] opacity-20" />
       </div>
 
-      {/* Loading state */}
+      {/* Loading spinner */}
       {!isLoaded && (
         <div className="absolute inset-0 flex items-center justify-center z-0">
           <div className="w-8 h-8 border-2 border-biolum-400/30 border-t-biolum-400 rounded-full animate-spin" />
         </div>
       )}
 
-      {/* Spline Canvas */}
+      {/* Spline iframe embed — isolated from React 19 */}
       <div className="absolute inset-0 rounded-3xl overflow-hidden">
-        <Spline
-          scene="https://prod.spline.design/V22OYn3JPQtt1WCO/scene.splinecode"
-          onLoad={handleLoad}
+        <iframe
+          src="https://my.spline.design/particleaibrain-xvMFTvV7XFhgF1OipCCk43bd/"
+          frameBorder="0"
+          width="100%"
+          height="100%"
+          onLoad={() => setIsLoaded(true)}
           style={{ 
-            width: "100%", 
-            height: "100%",
-            borderRadius: "24px"
+            borderRadius: "24px",
+            background: "transparent"
           }}
+          title="3D Brain"
+          allow="autoplay; fullscreen"
         />
       </div>
 
@@ -118,7 +115,7 @@ export default function BrainGlobe() {
         </AnimatePresence>
       </div>
 
-      {/* Region indicator dots — clickable to show facts */}
+      {/* Region indicator dots */}
       <div className="absolute inset-0 z-10 pointer-events-none">
         {regions.map((region, i) => {
           const angle = (i / regions.length) * Math.PI * 2 - Math.PI / 2;
@@ -149,4 +146,4 @@ export default function BrainGlobe() {
       </div>
     </div>
   );
-}
+}F
