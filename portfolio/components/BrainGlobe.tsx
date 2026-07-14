@@ -1,8 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useRef, useState, useEffect, Suspense } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { OrbitControls, useGLTF, Html, Float, PerspectiveCamera } from "@react-three/drei";
+import * as THREE from "three";
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, X, RotateCcw } from "lucide-react";
+import { BrainCircuit, X, RotateCcw } from "lucide-react";
 
 // Lobe facts data
 const lobeFacts: Record<string, { title: string; fact: string; color: string }> = {
@@ -63,238 +66,258 @@ const lobeFacts: Record<string, { title: string; fact: string; color: string }> 
   },
 };
 
-// Hotspot positions as percentages of image width/height
-// Adjust these after seeing your brain image
-const hotspots = [
-  { label: "Frontal Lobe", x: 35, y: 22 },
-  { label: "Parietal Lobe", x: 55, y: 18 },
-  { label: "Temporal Lobe", x: 25, y: 45 },
-  { label: "Occipital Lobe", x: 72, y: 35 },
-  { label: "Cerebellum", x: 65, y: 55 },
-  { label: "Corpus Callosum", x: 48, y: 32 },
-  { label: "Thalamus", x: 50, y: 40 },
-  { label: "Hypothalamus", x: 50, y: 48 },
-  { label: "Pons", x: 52, y: 58 },
-  { label: "Medulla Oblongata", x: 52, y: 66 },
-  { label: "Spinal Cord", x: 52, y: 78 },
+// Approximate hotspot positions in 3D space
+// These are estimates — adjust after seeing your model
+const hotspots: { label: string; position: [number, number, number] }[] = [
+  { label: "Frontal Lobe", position: [0.3, 0.8, 0.4] },
+  { label: "Parietal Lobe", position: [-0.2, 0.5, 0.3] },
+  { label: "Temporal Lobe", position: [0.5, -0.1, 0.2] },
+  { label: "Occipital Lobe", position: [-0.4, 0.3, -0.3] },
+  { label: "Cerebellum", position: [-0.3, -0.5, -0.2] },
+  { label: "Corpus Callosum", position: [0, 0.2, 0.1] },
+  { label: "Thalamus", position: [0, 0, 0.05] },
+  { label: "Hypothalamus", position: [0, -0.15, 0.1] },
+  { label: "Pons", position: [0, -0.4, -0.1] },
+  { label: "Medulla Oblongata", position: [0, -0.6, -0.15] },
+  { label: "Spinal Cord", position: [0, -0.9, -0.2] },
 ];
+
+// Hotspot marker component
+function Hotspot({
+  position,
+  label,
+  onHover,
+  onLeave,
+}: {
+  position: [number, number, number];
+  label: string;
+  onHover: (label: string) => void;
+  onLeave: () => void;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const meshRef = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    if (meshRef.current) {
+      meshRef.current.scale.setScalar(
+        hovered ? 1.5 + Math.sin(state.clock.elapsedTime * 5) * 0.2 : 1
+      );
+    }
+  });
+
+  const fact = lobeFacts[label];
+
+  return (
+    <mesh
+      ref={meshRef}
+      position={position}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        setHovered(true);
+        onHover(label);
+      }}
+      onPointerOut={(e) => {
+        e.stopPropagation();
+        setHovered(false);
+        onLeave();
+      }}
+    >
+      <sphereGeometry args={[0.06, 16, 16]} />
+      <meshBasicMaterial
+        color={hovered ? "#ffffff" : fact?.color || "#4dc3ff"}
+        transparent
+        opacity={hovered ? 0.95 : 0.7}
+      />
+      {hovered && (
+        <Html distanceFactor={8} zIndexRange={[100, 0]} center>
+          <div className="pointer-events-none whitespace-nowrap">
+            <span className="text-[10px] font-mono text-white bg-black/60 px-2 py-1 rounded backdrop-blur-sm border border-white/10">
+              {label}
+            </span>
+          </div>
+        </Html>
+      )}
+    </mesh>
+  );
+}
+
+// Brain model with hotspots
+function BrainModel({
+  onHover,
+  onLeave,
+}: {
+  onHover: (label: string) => void;
+  onLeave: () => void;
+}) {
+  const { scene } = useGLTF("/images/brain.glb");
+  const groupRef = useRef<THREE.Group>(null);
+
+  // Clone scene to avoid modifying cached original
+  const modelRef = useRef<THREE.Group>(null);
+
+  useEffect(() => {
+    if (scene && !modelRef.current) {
+      const cloned = scene.clone();
+      modelRef.current = cloned;
+      
+      // Center and scale the model
+      const box = new THREE.Box3().setFromObject(cloned);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const scale = 1.5 / maxDim;
+      
+      cloned.scale.setScalar(scale);
+      cloned.position.sub(center.multiplyScalar(scale));
+      
+      if (groupRef.current) {
+        groupRef.current.add(cloned);
+      }
+    }
+  }, [scene]);
+
+  return (
+    <group ref={groupRef}>
+      {hotspots.map((hotspot) => (
+        <Hotspot
+          key={hotspot.label}
+          position={hotspot.position}
+          label={hotspot.label}
+          onHover={onHover}
+          onLeave={onLeave}
+        />
+      ))}
+    </group>
+  );
+}
+
+// Loading fallback
+function BrainLoader() {
+  return (
+    <Html center>
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-8 h-8 border-2 border-biolum-400/30 border-t-biolum-400 rounded-full animate-spin" />
+        <span className="text-xs text-slate-500 font-mono">Loading brain model...</span>
+      </div>
+    </Html>
+  );
+}
 
 export default function BrainGlobe() {
   const [activeLabel, setActiveLabel] = useState<string | null>(null);
   const [isAutoSpinning, setIsAutoSpinning] = useState(true);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const controlsRef = useRef<any>(null);
 
   const activeFact = activeLabel ? lobeFacts[activeLabel] : null;
 
+  // Pause auto-spin when hovering
+  useEffect(() => {
+    if (controlsRef.current) {
+      controlsRef.current.autoRotate = isAutoSpinning && !activeLabel;
+    }
+  }, [isAutoSpinning, activeLabel]);
+
   return (
-    <div
-      ref={containerRef}
-      className="glass-card-strong rounded-2xl overflow-hidden border border-white/10 relative"
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
+    <div className="mt-6">
+      {/* Section label */}
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Brain className="w-4 h-4 text-biolum-400" />
-          <span className="text-xs font-mono text-slate-400 uppercase tracking-wider">
-            Interactive Brain Model
+          <BrainCircuit className="w-3.5 h-3.5 text-slate-500" />
+          <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+            Interactive 3D Brain Model
           </span>
         </div>
         <button
           onClick={() => setIsAutoSpinning(!isAutoSpinning)}
-          className="p-1.5 rounded-lg hover:bg-white/5 transition-colors"
+          className="p-1 rounded hover:bg-white/5 transition-colors"
           title={isAutoSpinning ? "Pause rotation" : "Resume rotation"}
         >
           <RotateCcw
-            className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-700 ${
-              isAutoSpinning ? "animate-spin" : ""
-            }`}
+            className={`w-3 h-3 text-slate-500 ${isAutoSpinning ? "animate-spin" : ""}`}
             style={{ animationDuration: "8s" }}
           />
         </button>
       </div>
 
-      {/* Brain Image Container */}
-      <div className="relative aspect-[4/5] w-full bg-gradient-to-b from-[#0a0e1a] via-[#0d1429] to-[#0a0e1a] overflow-hidden">
-        {/* Brain SVG illustration */}
-        <motion.div
-          animate={isAutoSpinning ? { rotateY: [0, 360] } : {}}
-          transition={isAutoSpinning ? { duration: 20, repeat: Infinity, ease: "linear" } : {}}
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ perspective: "1000px" }}
+      {/* 3D Canvas container */}
+      <div className="relative rounded-xl overflow-hidden bg-gradient-to-b from-[#0a0e1a] to-[#070b14] border border-white/5 h-[350px] sm:h-[400px]">
+        <Canvas
+          gl={{ antialias: true, alpha: true }}
+          dpr={[1, 2]}
         >
-          <div className="relative w-[85%] h-[85%]">
-            {/* Brain silhouette */}
-            <svg
-              viewBox="0 0 200 240"
-              className="w-full h-full drop-shadow-[0_0_30px_rgba(77,195,255,0.15)]"
-              style={{ filter: "drop-shadow(0 0 20px rgba(77,195,255,0.2))" }}
-            >
-              {/* Brain outline - stylized but anatomically suggestive */}
-              <defs>
-                <linearGradient id="brainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#1e3a5f" />
-                  <stop offset="50%" stopColor="#0d1429" />
-                  <stop offset="100%" stopColor="#1a2744" />
-                </linearGradient>
-                <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="rgba(77,195,255,0.1)" />
-                  <stop offset="100%" stopColor="rgba(77,195,255,0)" />
-                </radialGradient>
-              </defs>
+          <PerspectiveCamera makeDefault position={[0, 0, 3]} fov={50} />
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[5, 5, 5]} intensity={1} />
+          <directionalLight position={[-5, -5, -5]} intensity={0.3} color="#4dc3ff" />
+          <pointLight position={[0, 2, 0]} intensity={0.5} color="#4dc3ff" />
 
-              {/* Glow background */}
-              <ellipse cx="100" cy="120" rx="80" ry="100" fill="url(#glowGrad)" />
+          <Suspense fallback={<BrainLoader />}>
+            <BrainModel
+              onHover={(label) => setActiveLabel(label)}
+              onLeave={() => setActiveLabel(null)}
+            />
+          </Suspense>
 
-              {/* Main brain shape */}
-              <path
-                d="M100 20 
-                   C130 20, 155 35, 165 60
-                   C175 85, 170 110, 160 130
-                   C170 145, 165 165, 150 175
-                   C140 185, 130 190, 120 195
-                   C115 200, 110 210, 108 220
-                   C106 230, 104 235, 100 235
-                   C96 235, 94 230, 92 220
-                   C90 210, 85 200, 80 195
-                   C70 190, 60 185, 50 175
-                   C35 165, 30 145, 40 130
-                   C30 110, 25 85, 35 60
-                   C45 35, 70 20, 100 20Z"
-                fill="url(#brainGrad)"
-                stroke="rgba(77,195,255,0.3)"
-                strokeWidth="1"
-              />
+          <OrbitControls
+            ref={controlsRef}
+            autoRotate={isAutoSpinning}
+            autoRotateSpeed={1.5}
+            enableZoom={true}
+            minDistance={1.5}
+            maxDistance={5}
+            enablePan={false}
+            onStart={() => {
+              if (controlsRef.current) controlsRef.current.autoRotate = false;
+            }}
+            onEnd={() => {
+              if (controlsRef.current) controlsRef.current.autoRotate = isAutoSpinning;
+            }}
+          />
+        </Canvas>
 
-              {/* Cerebral hemispheres division */}
-              <path
-                d="M100 20 Q98 60 100 100 Q102 140 100 180"
-                fill="none"
-                stroke="rgba(77,195,255,0.2)"
-                strokeWidth="1.5"
-                strokeDasharray="4 2"
-              />
-
-              {/* Sulci lines - left hemisphere */}
-              <path d="M60 50 Q50 70 55 90" fill="none" stroke="rgba(77,195,255,0.15)" strokeWidth="1" />
-              <path d="M55 100 Q45 120 50 140" fill="none" stroke="rgba(77,195,255,0.15)" strokeWidth="1" />
-              <path d="M70 70 Q65 90 70 110" fill="none" stroke="rgba(77,195,255,0.15)" strokeWidth="1" />
-              <path d="M75 130 Q70 150 75 165" fill="none" stroke="rgba(77,195,255,0.15)" strokeWidth="1" />
-
-              {/* Sulci lines - right hemisphere */}
-              <path d="M140 50 Q150 70 145 90" fill="none" stroke="rgba(77,195,255,0.15)" strokeWidth="1" />
-              <path d="M145 100 Q155 120 150 140" fill="none" stroke="rgba(77,195,255,0.15)" strokeWidth="1" />
-              <path d="M130 70 Q135 90 130 110" fill="none" stroke="rgba(77,195,255,0.15)" strokeWidth="1" />
-              <path d="M125 130 Q130 150 125 165" fill="none" stroke="rgba(77,195,255,0.15)" strokeWidth="1" />
-
-              {/* Cerebellum */}
-              <ellipse cx="100" cy="175" rx="25" ry="15" fill="rgba(30,58,95,0.6)" stroke="rgba(77,195,255,0.2)" strokeWidth="1" />
-              <path d="M85 170 Q100 165 115 170" fill="none" stroke="rgba(77,195,255,0.15)" strokeWidth="1" />
-              <path d="M82 178 Q100 173 118 178" fill="none" stroke="rgba(77,195,255,0.15)" strokeWidth="1" />
-
-              {/* Brain stem */}
-              <path
-                d="M95 190 L93 210 L92 225 L95 230 L100 232 L105 230 L108 225 L107 210 L105 190Z"
-                fill="rgba(30,58,95,0.7)"
-                stroke="rgba(77,195,255,0.2)"
-                strokeWidth="1"
-              />
-
-              {/* Spinal cord */}
-              <path
-                d="M96 232 L94 245 L100 248 L106 245 L104 232Z"
-                fill="rgba(30,58,95,0.5)"
-                stroke="rgba(77,195,255,0.15)"
-                strokeWidth="1"
-              />
-            </svg>
-
-            {/* Hotspot markers */}
-            {hotspots.map((spot, i) => (
-              <motion.button
-                key={spot.label}
-                className="absolute w-4 h-4 -ml-2 -mt-2 rounded-full cursor-pointer z-10"
-                style={{
-                  left: `${spot.x}%`,
-                  top: `${spot.y}%`,
-                }}
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: i * 0.1 + 0.5, duration: 0.4 }}
-                onClick={() => setActiveLabel(activeLabel === spot.label ? null : spot.label)}
-                whileHover={{ scale: 1.3 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                {/* Pulse ring */}
-                <span
-                  className="absolute inset-0 rounded-full animate-ping opacity-40"
-                  style={{
-                    backgroundColor: lobeFacts[spot.label]?.color || "#4dc3ff",
-                    animationDuration: "2s",
-                  }}
-                />
-                {/* Core dot */}
-                <span
-                  className="absolute inset-0 rounded-full border-2 border-white/50 shadow-lg"
-                  style={{
-                    backgroundColor: lobeFacts[spot.label]?.color || "#4dc3ff",
-                    boxShadow: `0 0 10px ${lobeFacts[spot.label]?.color || "#4dc3ff"}40`,
-                  }}
-                />
-              </motion.button>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Tooltip */}
+        {/* Active fact tooltip */}
         <AnimatePresence>
           {activeFact && (
             <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
               transition={{ duration: 0.2 }}
-              className="absolute bottom-4 left-4 right-4 z-20"
+              className="absolute bottom-3 left-3 right-3 z-10"
             >
-              <div className="glass-card-strong rounded-xl p-4 border border-white/10">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span
-                        className="w-2 h-2 rounded-full"
-                        style={{ backgroundColor: activeFact.color }}
-                      />
-                      <h4 className="font-display text-sm font-bold text-white">
-                        {activeFact.title}
-                      </h4>
-                    </div>
-                    <p className="text-xs text-slate-300 font-sans leading-relaxed">
-                      {activeFact.fact}
-                    </p>
+              <div className="bg-[#0a0e1a]/90 backdrop-blur-md rounded-lg p-3 border border-white/10">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="w-2 h-2 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: activeFact.color }}
+                    />
+                    <h4 className="font-display text-xs font-bold text-white">
+                      {activeFact.title}
+                    </h4>
                   </div>
                   <button
                     onClick={() => setActiveLabel(null)}
-                    className="p-1 rounded-lg hover:bg-white/10 transition-colors flex-shrink-0"
+                    className="p-0.5 rounded hover:bg-white/10 transition-colors flex-shrink-0"
                   >
-                    <X className="w-3.5 h-3.5 text-slate-500" />
+                    <X className="w-3 h-3 text-slate-500" />
                   </button>
                 </div>
+                <p className="text-[11px] text-slate-300 font-sans leading-relaxed mt-1 pl-4">
+                  {activeFact.fact}
+                </p>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Hint text */}
+        {/* Hint */}
         {!activeLabel && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2 }}
-            className="absolute top-4 right-4 z-10"
-          >
-            <span className="text-[10px] font-mono text-slate-600 uppercase tracking-widest">
-              Tap nodes to explore
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
+            <span className="text-[9px] font-mono text-slate-600 uppercase tracking-widest">
+              Drag to rotate • Hover nodes
             </span>
-          </motion.div>
+          </div>
         )}
       </div>
     </div>
