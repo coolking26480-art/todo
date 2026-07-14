@@ -1,23 +1,26 @@
 "use client";
 
 import { useRef, useState, useMemo, Suspense, useCallback } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, extend } from "@react-three/fiber";
 import { Environment, ContactShadows, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
+
+// Extend Three.js classes for JSX usage in R3F v9
+extend({ Line_: THREE.Line });
 
 // ─── Types ───
 interface BrainRegion {
   name: string;
   fact: string;
   color: string;
-  spheres: [number, number, number, number][]; // x, y, z, radius
+  spheres: [number, number, number, number][];
 }
 
 interface BrainMeshProps {
   onRegionHover: (region: BrainRegion | null) => void;
 }
 
-// ─── Procedural Brain: clusters of spheres forming gyri ───
+// ─── Procedural Brain ───
 function BrainMesh({ onRegionHover }: BrainMeshProps) {
   const groupRef = useRef<THREE.Group>(null);
   const [hoveredName, setHoveredName] = useState<string | null>(null);
@@ -97,9 +100,9 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
     []
   );
 
-  // Synapse connection curves
+  // Synapse curves
   const synapseCurves = useMemo(() => {
-    const curves: { geometry: THREE.BufferGeometry; color: string }[] = [];
+    const curves: { points: THREE.Vector3[]; color: string }[] = [];
     for (let i = 0; i < regions.length - 1; i++) {
       const start = regions[i].spheres[0];
       const end = regions[i + 1].spheres[0];
@@ -113,14 +116,12 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
         new THREE.Vector3(mid[0], mid[1], mid[2]),
         new THREE.Vector3(end[0], end[1], end[2])
       );
-      const points = curve.getPoints(24);
-      const geometry = new THREE.BufferGeometry().setFromPoints(points);
-      curves.push({ geometry, color: regions[i].color });
+      curves.push({ points: curve.getPoints(24), color: regions[i].color });
     }
     return curves;
   }, [regions]);
 
-  // Auto-rotation with idle resume
+  // Auto-rotation
   useFrame((state, delta) => {
     if (!groupRef.current) return;
     const idleTime = Date.now() - lastInteractionRef.current;
@@ -153,7 +154,7 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
 
   return (
     <group ref={groupRef}>
-      {/* Central dark core */}
+      {/* Central core */}
       <mesh>
         <sphereGeometry args={[0.52, 32, 32]} />
         <meshPhysicalMaterial
@@ -166,7 +167,7 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
         />
       </mesh>
 
-      {/* Gyri sphere clusters */}
+      {/* Gyri spheres */}
       {regions.map((region) =>
         region.spheres.map((s, i) => {
           const isHovered = hoveredName === region.name;
@@ -196,24 +197,26 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
         })
       )}
 
-      {/* Synapse connection lines */}
-      {synapseCurves.map((synapse, i) => (
-        <line key={`synapse-${i}`} geometry={synapse.geometry}>
-          <lineBasicMaterial
-            color={isAnyHovered ? synapse.color : "#1e3a5f"}
-            transparent
-            opacity={isAnyHovered ? 0.7 : 0.2}
-          />
-        </line>
-      ))}
+      {/* Synapse lines — using LineSegments for R3F v9 compatibility */}
+      {synapseCurves.map((synapse, i) => {
+        const geometry = new THREE.BufferGeometry().setFromPoints(synapse.points);
+        return (
+          <lineSegments key={`synapse-${i}`} geometry={geometry}>
+            <lineBasicMaterial
+              color={isAnyHovered ? synapse.color : "#1e3a5f"}
+              transparent
+              opacity={isAnyHovered ? 0.7 : 0.2}
+            />
+          </lineSegments>
+        );
+      })}
 
-      {/* Ambient neural particles */}
       <NeuralParticles active={isAnyHovered} />
     </group>
   );
 }
 
-// ─── Floating neural particles around the brain ───
+// ─── Neural particles ───
 function NeuralParticles({ active }: { active: boolean }) {
   const particlesRef = useRef<THREE.Points>(null);
   const count = 80;
@@ -244,7 +247,6 @@ function NeuralParticles({ active }: { active: boolean }) {
       posArray[i * 3 + 1] += velocities[i * 3 + 1];
       posArray[i * 3 + 2] += velocities[i * 3 + 2];
 
-      // Orbit constraint
       const dist = Math.sqrt(
         posArray[i * 3] ** 2 +
           posArray[i * 3 + 1] ** 2 +
@@ -280,7 +282,7 @@ function NeuralParticles({ active }: { active: boolean }) {
   );
 }
 
-// ─── Scene lighting & environment ───
+// ─── Scene ───
 function Scene({ onRegionHover }: { onRegionHover: (region: BrainRegion | null) => void }) {
   return (
     <>
@@ -314,7 +316,7 @@ function Scene({ onRegionHover }: { onRegionHover: (region: BrainRegion | null) 
   );
 }
 
-// ─── Main exported component ───
+// ─── Main component ───
 export default function BrainGlobe() {
   const [hoveredRegion, setHoveredRegion] = useState<BrainRegion | null>(null);
 
@@ -323,13 +325,13 @@ export default function BrainGlobe() {
       {/* Y2K chrome frame */}
       <div className="absolute inset-0 rounded-3xl bg-gradient-to-b from-white/[0.06] to-transparent border border-white/[0.08] backdrop-blur-sm shadow-[0_0_50px_rgba(77,195,255,0.1),inset_0_1px_0_rgba(255,255,255,0.08)]" />
 
-      {/* Corner bracket accents — Y2K */}
+      {/* Corner brackets */}
       <div className="absolute top-3 left-3 w-5 h-5 border-t border-l border-biolum-400/30 rounded-tl-md" />
       <div className="absolute top-3 right-3 w-5 h-5 border-t border-r border-biolum-400/30 rounded-tr-md" />
       <div className="absolute bottom-3 left-3 w-5 h-5 border-b border-l border-biolum-400/30 rounded-bl-md" />
       <div className="absolute bottom-3 right-3 w-5 h-5 border-b border-r border-biolum-400/30 rounded-br-md" />
 
-      {/* Scan line overlay — Y2K CRT vibe */}
+      {/* Scan line overlay */}
       <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.15)_50%)] bg-[length:100%_4px] opacity-20" />
       </div>
@@ -348,7 +350,7 @@ export default function BrainGlobe() {
         </Suspense>
       </Canvas>
 
-      {/* Hover info panel */}
+      {/* Hover info */}
       <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 translate-y-full w-full text-center pointer-events-none">
         {hoveredRegion ? (
           <div className="inline-block px-3 py-1.5 rounded-lg bg-[#0a0e1a]/90 border border-white/10 backdrop-blur-md">
