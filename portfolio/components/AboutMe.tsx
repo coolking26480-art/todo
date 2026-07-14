@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { User, GraduationCap, Briefcase, Heart, MapPin, Calendar, Zap } from "lucide-react";
-import BrainGlobe from "@/components/BrainGlobe";
 
 const education = [
   {
@@ -36,7 +35,7 @@ const experience = [
     role: "Head of Design",
     company: "Animal Welfare Committee, Pune",
     period: "August 2023 – April 2025",
-    description: "Produced 50+ posters and video assets; managed the organisation's social media accounts.Led a team of 6 designers and mediated 15+ interviews and meetings with potential rescue animal adopters.",
+    description: "Produced 50+ posters and video assets; managed the organisation’s social media accounts.Led a team of 6 designers and mediated 15+ interviews and meetings with potential rescue animal adopters.",
   },
 ];
 
@@ -73,7 +72,7 @@ export default function AboutMe() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-12"
+          className="mb-16"
         >
           <div className="flex items-center gap-3 mb-4">
             <User className="w-6 h-6 text-biolum-400" />
@@ -91,14 +90,14 @@ export default function AboutMe() {
 
         {/* Asymmetric Swiss Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Column - Bio + Brain Globe */}
+          {/* Left Column - Bio */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="lg:col-span-5"
           >
-            <div className="glass-card rounded-2xl p-8">
+            <div className="glass-card rounded-2xl p-8 h-full">
               <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-biolum-500/30 to-purple-500/20 border border-biolum-500/20 flex items-center justify-center mb-6">
                 <span className="text-4xl">👤</span>
               </div>
@@ -121,14 +120,11 @@ export default function AboutMe() {
               </div>
               <div className="swiss-line mb-6" />
               <p className="text-slate-400 text-sm leading-relaxed font-sans">
-                A Psychology student and a creative at heart, I believe the most interesting problems live at the intersection of disciplines. This drives me to position myself at the crossroads of research, design, and storytelling. With experience spanning diverse domains, I leverage a deep understanding of human behavior to craft intuitive, impactful digital experiences and narratives.
+                A Psychology student and a creative at heart, I believe the most interesting problems live at the intersection of disciplines. This drives me to position myself at the crossroads of research, design, and storytelling. With experience spanning diverse domains, I leverage a deep understanding of human behavior to craft intuitive, impactful digital experiences and narratives. 
               </p>
               <p className="text-slate-400 text-sm leading-relaxed font-sans mt-4">
                 When not in the lab or at the keyboard, you will find me running, cooking, or experimenting with different art mediums.
               </p>
-
-              {/* 🧠 3D Brain Globe — placed right here */}
-              <BrainGlobe />
             </div>
           </motion.div>
 
