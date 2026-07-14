@@ -1,3 +1,5 @@
+/// <reference types="@react-three/fiber" />
+
 "use client";
 
 import { useRef, useState, useEffect, Suspense } from "react";
@@ -6,6 +8,7 @@ import { OrbitControls, useGLTF, Html, Float, PerspectiveCamera } from "@react-t
 import * as THREE from "three";
 import { motion, AnimatePresence } from "framer-motion";
 import { BrainCircuit, X, RotateCcw } from "lucide-react";
+import { extend, Object3DNode } from "@react-three/fiber";
 
 // Lobe facts data
 const lobeFacts: Record<string, { title: string; fact: string; color: string }> = {
