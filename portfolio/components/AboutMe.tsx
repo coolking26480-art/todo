@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { User, GraduationCap, Briefcase, Heart, MapPin, Calendar, Zap } from "lucide-react";
-import BrainGlobe from "./BrainGlobe";
 
 const education = [
   {
@@ -36,7 +35,7 @@ const experience = [
     role: "Head of Design",
     company: "Animal Welfare Committee, Pune",
     period: "August 2023 – April 2025",
-    description: "Produced 50+ posters and video assets; managed the organisation's social media accounts.Led a team of 6 designers and mediated 15+ interviews and meetings with potential rescue animal adopters.",
+    description: "Produced 50+ posters and video assets; managed the organisation’s social media accounts.Led a team of 6 designers and mediated 15+ interviews and meetings with potential rescue animal adopters.",
   },
 ];
 
@@ -91,7 +90,7 @@ export default function AboutMe() {
 
         {/* Asymmetric Swiss Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column - Bio + Brain Globe */}
+          {/* Left Column - Bio */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -126,9 +125,6 @@ export default function AboutMe() {
               <p className="text-slate-400 text-sm leading-relaxed font-sans mt-4">
                 When not in the lab or at the keyboard, you will find me running, cooking, or experimenting with different art mediums.
               </p>
-
-              {/* Brain Globe — inside the bio card */}
-              <BrainGlobe />
             </div>
           </motion.div>
 
