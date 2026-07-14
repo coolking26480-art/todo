@@ -1,12 +1,9 @@
 "use client";
 
 import { useRef, useState, useMemo, Suspense, useCallback } from "react";
-import { Canvas, useFrame, extend } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, ContactShadows, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
-
-// Extend Three.js classes for JSX usage in R3F v9
-extend({ Line_: THREE.Line });
 
 // ─── Types ───
 interface BrainRegion {
@@ -102,7 +99,7 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
 
   // Synapse curves
   const synapseCurves = useMemo(() => {
-    const curves: { points: THREE.Vector3[]; color: string }[] = [];
+    const curves: { geometry: THREE.BufferGeometry; color: string }[] = [];
     for (let i = 0; i < regions.length - 1; i++) {
       const start = regions[i].spheres[0];
       const end = regions[i + 1].spheres[0];
@@ -116,7 +113,9 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
         new THREE.Vector3(mid[0], mid[1], mid[2]),
         new THREE.Vector3(end[0], end[1], end[2])
       );
-      curves.push({ points: curve.getPoints(24), color: regions[i].color });
+      const points = curve.getPoints(24);
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      curves.push({ geometry, color: regions[i].color });
     }
     return curves;
   }, [regions]);
@@ -197,19 +196,16 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
         })
       )}
 
-      {/* Synapse lines — using LineSegments for R3F v9 compatibility */}
-      {synapseCurves.map((synapse, i) => {
-        const geometry = new THREE.BufferGeometry().setFromPoints(synapse.points);
-        return (
-          <lineSegments key={`synapse-${i}`} geometry={geometry}>
-            <lineBasicMaterial
-              color={isAnyHovered ? synapse.color : "#1e3a5f"}
-              transparent
-              opacity={isAnyHovered ? 0.7 : 0.2}
-            />
-          </lineSegments>
-        );
-      })}
+      {/* Synapse lines */}
+      {synapseCurves.map((synapse, i) => (
+        <lineSegments key={`synapse-${i}`} geometry={synapse.geometry}>
+          <lineBasicMaterial
+            color={isAnyHovered ? synapse.color : "#1e3a5f"}
+            transparent
+            opacity={isAnyHovered ? 0.7 : 0.2}
+          />
+        </lineSegments>
+      ))}
 
       <NeuralParticles active={isAnyHovered} />
     </group>
@@ -221,21 +217,21 @@ function NeuralParticles({ active }: { active: boolean }) {
   const particlesRef = useRef<THREE.Points>(null);
   const count = 80;
 
-  const [positions, velocities] = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    const vel = new Float32Array(count * 3);
+  const particleData = useMemo(() => {
+    const positions = new Float32Array(count * 3);
+    const velocities = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       const r = 0.9 + Math.random() * 0.6;
-      pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      pos[i * 3 + 2] = r * Math.cos(phi);
-      vel[i * 3] = (Math.random() - 0.5) * 0.003;
-      vel[i * 3 + 1] = (Math.random() - 0.5) * 0.003;
-      vel[i * 3 + 2] = (Math.random() - 0.5) * 0.003;
+      positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      positions[i * 3 + 2] = r * Math.cos(phi);
+      velocities[i * 3] = (Math.random() - 0.5) * 0.003;
+      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.003;
+      velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.003;
     }
-    return [pos, vel];
+    return { positions, velocities };
   }, []);
 
   useFrame(() => {
@@ -243,9 +239,9 @@ function NeuralParticles({ active }: { active: boolean }) {
     const posArray = particlesRef.current.geometry.attributes.position
       .array as Float32Array;
     for (let i = 0; i < count; i++) {
-      posArray[i * 3] += velocities[i * 3];
-      posArray[i * 3 + 1] += velocities[i * 3 + 1];
-      posArray[i * 3 + 2] += velocities[i * 3 + 2];
+      posArray[i * 3] += particleData.velocities[i * 3];
+      posArray[i * 3 + 1] += particleData.velocities[i * 3 + 1];
+      posArray[i * 3 + 2] += particleData.velocities[i * 3 + 2];
 
       const dist = Math.sqrt(
         posArray[i * 3] ** 2 +
@@ -253,24 +249,26 @@ function NeuralParticles({ active }: { active: boolean }) {
           posArray[i * 3 + 2] ** 2
       );
       if (dist > 1.8 || dist < 0.7) {
-        velocities[i * 3] *= -1;
-        velocities[i * 3 + 1] *= -1;
-        velocities[i * 3 + 2] *= -1;
+        particleData.velocities[i * 3] *= -1;
+        particleData.velocities[i * 3 + 1] *= -1;
+        particleData.velocities[i * 3 + 2] *= -1;
       }
     }
     particlesRef.current.geometry.attributes.position.needsUpdate = true;
   });
 
+  // Create geometry with args for R3F v9
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute(
+      "position",
+      new THREE.BufferAttribute(particleData.positions, 3)
+    );
+    return geo;
+  }, [particleData.positions]);
+
   return (
-    <points ref={particlesRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={count}
-          array={positions}
-          itemSize={3}
-        />
-      </bufferGeometry>
+    <points ref={particlesRef} geometry={geometry}>
       <pointsMaterial
         size={0.015}
         color={active ? "#4dc3ff" : "#2a4a6a"}
