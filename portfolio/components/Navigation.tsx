@@ -39,10 +39,10 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
 
   return (
     <nav className="fixed top-5 left-0 right-0 z-50 flex justify-center px-4">
-      <div className="w-full max-w-5xl">
+      <div className="w-full max-w-lg">
         <div
           ref={navBarRef}
-          className="relative flex items-center justify-between h-14 px-2 rounded-full overflow-hidden"
+          className="relative flex items-center justify-center h-14 px-2 rounded-full overflow-hidden"
           style={{
             background: `
               radial-gradient(ellipse 80% 50% at ${mousePos.x}% ${mousePos.y}%, rgba(100, 180, 255, 0.08) 0%, transparent 50%),
@@ -69,23 +69,8 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
             }}
           />
 
-          {/* Logo */}
-          <motion.button
-            onClick={() => onNavigate("home")}
-            className="relative z-30 flex items-center gap-2 pl-3 pr-4 group"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-biolum-400 to-biolum-600 flex items-center justify-center shadow-[0_0_12px_rgba(0,168,255,0.3)]">
-              <span className="text-white font-bold text-xs font-display">SJ</span>
-            </div>
-            <span className="text-white/90 font-display font-semibold text-sm tracking-wide hidden sm:block group-hover:text-white transition-colors">
-              Sujal
-            </span>
-          </motion.button>
-
-          {/* Nav Items */}
-          <div className="relative z-30 hidden md:flex items-center gap-0.5 ml-auto">
+          {/* Nav Items — centered */}
+          <div className="relative z-30 hidden md:flex items-center gap-0.5">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeView === item.id;
@@ -121,10 +106,10 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
           </div>
 
           {/* Mobile toggle */}
-          <div className="relative z-30 flex items-center pr-3">
+          <div className="absolute right-3 z-30 md:hidden">
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-1.5 rounded-full text-white/50 hover:text-white hover:bg-white/5 transition-colors"
+              className="p-1.5 rounded-full text-white/50 hover:text-white hover:bg-white/5 transition-colors"
             >
               {mobileOpen ? <X size={16} /> : <Menu size={16} />}
             </button>
