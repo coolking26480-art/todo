@@ -91,15 +91,14 @@ export default function AboutMe() {
 
         {/* Asymmetric Swiss Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Column - Bio + Brain Globe */}
+        {/* Left Column - Bio + Brain Globe */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:col-span-5 space-y-6"
+            className="lg:col-span-5"
           >
-            {/* Bio Card */}
-            <div className="glass-card rounded-2xl p-8">
+            <div className="glass-card rounded-2xl p-8 h-full">
               <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-biolum-500/30 to-purple-500/20 border border-biolum-500/20 flex items-center justify-center mb-6">
                 <span className="text-4xl">👤</span>
               </div>
@@ -127,10 +126,10 @@ export default function AboutMe() {
               <p className="text-slate-400 text-sm leading-relaxed font-sans mt-4">
                 When not in the lab or at the keyboard, you will find me running, cooking, or experimenting with different art mediums.
               </p>
-            </div>
 
-            {/* Brain Globe */}
-            <BrainGlobe />
+              {/* Brain Globe — inside the bio card */}
+              <BrainGlobe />
+            </div>
           </motion.div>
 
           {/* Right Column - Details */}
