@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Spline from "@splinetool/react-spline/next";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -19,69 +19,32 @@ const regions: BrainRegion[] = [
 ];
 
 export default function BrainGlobe() {
-  const splineRef = useRef<any>(null);
   const [hoveredRegion, setHoveredRegion] = useState<BrainRegion | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const autoRotateRef = useRef(true);
-  const lastInteractionRef = useRef(Date.now());
-  const rafRef = useRef<number>(0);
+  const [activeRegionIndex, setActiveRegionIndex] = useState(0);
 
-  // Auto-rotation logic
+  // Auto-cycle through regions when idle
   useEffect(() => {
-    const animate = () => {
-      if (!splineRef.current) {
-        rafRef.current = requestAnimationFrame(animate);
-        return;
+    if (!isLoaded) return;
+
+    const interval = setInterval(() => {
+      if (!hoveredRegion) {
+        setActiveRegionIndex((prev) => (prev + 1) % regions.length);
+        setHoveredRegion(regions[activeRegionIndex]);
+        setTimeout(() => setHoveredRegion(null), 2500);
       }
+    }, 6000);
 
-      const idleTime = Date.now() - lastInteractionRef.current;
-      autoRotateRef.current = idleTime > 2500;
-
-      if (autoRotateRef.current) {
-        // Try to rotate the brain object
-        try {
-          const brain = splineRef.current.findObjectByName("Brain_Part_06");
-          if (brain) {
-            brain.rotation.y += 0.003;
-          }
-        } catch {
-          // Fallback: rotate camera if object not found
-          try {
-            splineRef.current.emitEvent("mouseDown");
-            splineRef.current.emitEvent("mouseUp");
-          } catch {}
-        }
-      }
-
-      rafRef.current = requestAnimationFrame(animate);
-    };
-
-    rafRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, []);
-
-  const handleMouseMove = useCallback(() => {
-    lastInteractionRef.current = Date.now();
-  }, []);
+    return () => clearInterval(interval);
+  }, [isLoaded, hoveredRegion, activeRegionIndex]);
 
   const handleLoad = useCallback(() => {
     setIsLoaded(true);
   }, []);
 
-  // Cycle through regions for demo effect (since we can't detect hover on Spline mesh yet)
-  useEffect(() => {
-    if (!isLoaded) return;
-
-    const interval = setInterval(() => {
-      if (autoRotateRef.current) {
-        const randomRegion = regions[Math.floor(Math.random() * regions.length)];
-        setHoveredRegion(randomRegion);
-        setTimeout(() => setHoveredRegion(null), 2000);
-      }
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [isLoaded]);
+  const handleRegionHover = useCallback((region: BrainRegion | null) => {
+    setHoveredRegion(region);
+  }, []);
 
   return (
     <div className="relative w-full aspect-square max-w-[320px] mx-auto mt-6">
@@ -107,13 +70,8 @@ export default function BrainGlobe() {
       )}
 
       {/* Spline Canvas */}
-      <div 
-        className="absolute inset-0 rounded-3xl overflow-hidden"
-        onMouseMove={handleMouseMove}
-        onTouchStart={handleMouseMove}
-      >
+      <div className="absolute inset-0 rounded-3xl overflow-hidden">
         <Spline
-          ref={splineRef}
           scene="https://prod.spline.design/V22OYn3JPQtt1WCO/scene.splinecode"
           onLoad={handleLoad}
           style={{ 
@@ -163,9 +121,8 @@ export default function BrainGlobe() {
       {/* Region indicator dots — clickable to show facts */}
       <div className="absolute inset-0 z-10 pointer-events-none">
         {regions.map((region, i) => {
-          // Position dots around the brain at approximate lobe positions
           const angle = (i / regions.length) * Math.PI * 2 - Math.PI / 2;
-          const radius = 38; // percentage from center
+          const radius = 38;
           const x = 50 + Math.cos(angle) * radius;
           const y = 50 + Math.sin(angle) * radius * 0.8;
 
@@ -182,15 +139,9 @@ export default function BrainGlobe() {
                   ? `0 0 8px ${region.color}` 
                   : "none",
               }}
-              onMouseEnter={() => {
-                setHoveredRegion(region);
-                lastInteractionRef.current = Date.now();
-              }}
-              onMouseLeave={() => setHoveredRegion(null)}
-              onClick={() => {
-                setHoveredRegion(region);
-                lastInteractionRef.current = Date.now();
-              }}
+              onMouseEnter={() => handleRegionHover(region)}
+              onMouseLeave={() => handleRegionHover(null)}
+              onClick={() => handleRegionHover(region)}
               aria-label={region.name}
             />
           );
