@@ -39,7 +39,7 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
 
   return (
     <nav className="fixed top-5 left-0 right-0 z-50 flex justify-center px-4">
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-xl">
         <div
           ref={navBarRef}
           className="relative flex items-center justify-center h-14 px-2 rounded-full overflow-hidden"
