@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { User, GraduationCap, Briefcase, Heart, MapPin, Calendar, Zap } from "lucide-react";
-import BrainGlobe from "./BrainGlobe";
+import BrainGlobe from "@/components/BrainGlobe";
 
 const education = [
   {
