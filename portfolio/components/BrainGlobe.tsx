@@ -10,20 +10,21 @@ interface BrainRegion {
   name: string;
   fact: string;
   color: string;
-  spheres: [number, number, number, number][];
+  spheres: [number, number, number, number][]; // x, y, z, radius
 }
 
 interface BrainMeshProps {
   onRegionHover: (region: BrainRegion | null) => void;
 }
 
-// ─── Procedural Brain ───
+// ─── Dense procedural brain with realistic gyri layout ───
 function BrainMesh({ onRegionHover }: BrainMeshProps) {
   const groupRef = useRef<THREE.Group>(null);
   const [hoveredName, setHoveredName] = useState<string | null>(null);
   const autoRotateRef = useRef(true);
   const lastInteractionRef = useRef(Date.now());
 
+  // 40+ spheres arranged in actual brain shape
   const regions: BrainRegion[] = useMemo(
     () => [
       {
@@ -31,14 +32,17 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
         fact: "Executive function, decision-making, personality",
         color: "#4dc3ff",
         spheres: [
-          [0.0, 0.7, 0.3, 0.35],
-          [0.25, 0.65, 0.15, 0.28],
-          [-0.2, 0.72, 0.2, 0.3],
-          [0.1, 0.85, 0.1, 0.22],
-          [-0.1, 0.8, 0.25, 0.25],
-          [0.35, 0.6, 0.25, 0.2],
-          [-0.35, 0.62, 0.15, 0.22],
-          [0.0, 0.95, 0.0, 0.18],
+          // Upper frontal (prefrontal cortex)
+          [0.0, 0.85, 0.35, 0.22], [0.18, 0.82, 0.28, 0.20], [-0.18, 0.82, 0.28, 0.20],
+          [0.32, 0.75, 0.20, 0.18], [-0.32, 0.75, 0.20, 0.18],
+          [0.10, 0.95, 0.15, 0.16], [-0.10, 0.95, 0.15, 0.16],
+          [0.42, 0.68, 0.12, 0.15], [-0.42, 0.68, 0.12, 0.15],
+          // Mid frontal
+          [0.0, 0.68, 0.40, 0.24], [0.22, 0.65, 0.32, 0.20], [-0.22, 0.65, 0.32, 0.20],
+          [0.38, 0.58, 0.22, 0.17], [-0.38, 0.58, 0.22, 0.17],
+          // Lower frontal
+          [0.0, 0.52, 0.38, 0.20], [0.18, 0.48, 0.30, 0.18], [-0.18, 0.48, 0.30, 0.18],
+          [0.30, 0.42, 0.18, 0.14], [-0.30, 0.42, 0.18, 0.14],
         ],
       },
       {
@@ -46,13 +50,15 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
         fact: "Sensory processing, spatial awareness, navigation",
         color: "#a855f7",
         spheres: [
-          [0.0, 0.25, 0.35, 0.32],
-          [0.3, 0.2, 0.25, 0.28],
-          [-0.25, 0.22, 0.3, 0.3],
-          [0.15, 0.35, 0.4, 0.22],
-          [-0.15, 0.3, 0.38, 0.24],
-          [0.4, 0.15, 0.2, 0.2],
-          [-0.38, 0.18, 0.22, 0.22],
+          // Upper parietal
+          [0.0, 0.35, 0.42, 0.22], [0.20, 0.32, 0.35, 0.20], [-0.20, 0.32, 0.35, 0.20],
+          [0.35, 0.28, 0.25, 0.17], [-0.35, 0.28, 0.25, 0.17],
+          [0.12, 0.42, 0.32, 0.18], [-0.12, 0.42, 0.32, 0.18],
+          // Mid parietal
+          [0.0, 0.18, 0.38, 0.20], [0.22, 0.15, 0.30, 0.18], [-0.22, 0.15, 0.30, 0.18],
+          [0.32, 0.10, 0.20, 0.15], [-0.32, 0.10, 0.20, 0.15],
+          // Lower parietal (near temporal junction)
+          [0.15, 0.05, 0.28, 0.16], [-0.15, 0.05, 0.28, 0.16],
         ],
       },
       {
@@ -60,12 +66,14 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
         fact: "Memory formation, language comprehension, auditory",
         color: "#22d3ee",
         spheres: [
-          [0.45, -0.1, 0.1, 0.28],
-          [-0.42, -0.08, 0.12, 0.3],
-          [0.5, -0.2, 0.0, 0.24],
-          [-0.48, -0.18, 0.05, 0.26],
-          [0.38, 0.0, 0.15, 0.2],
-          [-0.35, 0.02, 0.18, 0.22],
+          // Left temporal (larger cluster)
+          [0.48, -0.05, 0.15, 0.22], [0.52, -0.15, 0.08, 0.20],
+          [0.42, -0.12, 0.18, 0.18], [0.55, -0.22, 0.05, 0.16],
+          [0.45, 0.02, 0.12, 0.17], [0.50, -0.28, 0.02, 0.14],
+          // Right temporal
+          [-0.48, -0.05, 0.15, 0.22], [-0.52, -0.15, 0.08, 0.20],
+          [-0.42, -0.12, 0.18, 0.18], [-0.55, -0.22, 0.05, 0.16],
+          [-0.45, 0.02, 0.12, 0.17], [-0.50, -0.28, 0.02, 0.14],
         ],
       },
       {
@@ -73,12 +81,11 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
         fact: "Visual processing, pattern recognition, color",
         color: "#f472b6",
         spheres: [
-          [0.0, -0.35, 0.25, 0.3],
-          [0.2, -0.4, 0.2, 0.25],
-          [-0.18, -0.38, 0.22, 0.26],
-          [0.0, -0.5, 0.15, 0.22],
-          [0.1, -0.45, 0.3, 0.18],
-          [-0.1, -0.42, 0.28, 0.2],
+          // Back of brain
+          [0.0, -0.15, 0.40, 0.20], [0.15, -0.18, 0.35, 0.18], [-0.15, -0.18, 0.35, 0.18],
+          [0.28, -0.22, 0.25, 0.16], [-0.28, -0.22, 0.25, 0.16],
+          [0.0, -0.30, 0.32, 0.18], [0.12, -0.32, 0.25, 0.15], [-0.12, -0.32, 0.25, 0.15],
+          [0.0, -0.42, 0.20, 0.14],
         ],
       },
       {
@@ -86,34 +93,44 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
         fact: "Motor coordination, balance, procedural learning",
         color: "#34d399",
         spheres: [
-          [0.0, -0.7, -0.1, 0.28],
-          [0.15, -0.75, -0.05, 0.22],
-          [-0.12, -0.72, -0.08, 0.24],
-          [0.08, -0.82, -0.02, 0.18],
-          [-0.08, -0.8, -0.05, 0.2],
+          // Below occipital, smaller cluster
+          [0.0, -0.55, 0.15, 0.18], [0.12, -0.58, 0.10, 0.16], [-0.12, -0.58, 0.10, 0.16],
+          [0.0, -0.65, 0.08, 0.14], [0.08, -0.62, 0.06, 0.12], [-0.08, -0.62, 0.06, 0.12],
+          [0.0, -0.72, 0.05, 0.10],
         ],
       },
     ],
     []
   );
 
-  // Synapse curves
+  // Flatten all spheres for the smooth outer hull (optional visual enhancement)
+  const allSpheres = useMemo(() => {
+    const result: { position: [number, number, number]; radius: number; region: BrainRegion }[] = [];
+    regions.forEach((region) => {
+      region.spheres.forEach((s) => {
+        result.push({ position: [s[0], s[1], s[2]], radius: s[3], region });
+      });
+    });
+    return result;
+  }, [regions]);
+
+  // Synapse curves between region centers
   const synapseCurves = useMemo(() => {
     const curves: { geometry: THREE.BufferGeometry; color: string }[] = [];
     for (let i = 0; i < regions.length - 1; i++) {
       const start = regions[i].spheres[0];
       const end = regions[i + 1].spheres[0];
       const mid = [
-        (start[0] + end[0]) / 2 + (Math.sin(i * 2.5) * 0.2),
-        (start[1] + end[1]) / 2 + (Math.cos(i * 1.7) * 0.15),
-        (start[2] + end[2]) / 2 + 0.25,
+        (start[0] + end[0]) / 2 + (Math.sin(i * 2.5) * 0.15),
+        (start[1] + end[1]) / 2 + (Math.cos(i * 1.7) * 0.12),
+        (start[2] + end[2]) / 2 + 0.2,
       ];
       const curve = new THREE.QuadraticBezierCurve3(
         new THREE.Vector3(start[0], start[1], start[2]),
         new THREE.Vector3(mid[0], mid[1], mid[2]),
         new THREE.Vector3(end[0], end[1], end[2])
       );
-      const points = curve.getPoints(24);
+      const points = curve.getPoints(30);
       const geometry = new THREE.BufferGeometry().setFromPoints(points);
       curves.push({ geometry, color: regions[i].color });
     }
@@ -127,9 +144,9 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
     autoRotateRef.current = idleTime > 2500;
 
     if (autoRotateRef.current) {
-      groupRef.current.rotation.y += delta * 0.25;
+      groupRef.current.rotation.y += delta * 0.2;
       groupRef.current.rotation.x =
-        Math.sin(state.clock.elapsedTime * 0.15) * 0.08;
+        Math.sin(state.clock.elapsedTime * 0.12) * 0.06;
     }
   });
 
@@ -153,56 +170,56 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
 
   return (
     <group ref={groupRef}>
-      {/* Central core */}
+      {/* Smooth outer hull — one large sphere to fill gaps between gyri */}
       <mesh>
-        <sphereGeometry args={[0.52, 32, 32]} />
+        <sphereGeometry args={[0.58, 48, 48]} />
         <meshPhysicalMaterial
           color="#0d1117"
-          metalness={0.95}
-          roughness={0.2}
+          metalness={0.92}
+          roughness={0.25}
           clearcoat={1}
-          clearcoatRoughness={0.1}
-          envMapIntensity={1.2}
+          clearcoatRoughness={0.08}
+          envMapIntensity={1.0}
+          transparent
+          opacity={0.95}
         />
       </mesh>
 
-      {/* Gyri spheres */}
-      {regions.map((region) =>
-        region.spheres.map((s, i) => {
-          const isHovered = hoveredName === region.name;
-          return (
-            <mesh
-              key={`${region.name}-${i}`}
-              position={[s[0], s[1], s[2]]}
-              onPointerOver={(e) => {
-                e.stopPropagation();
-                handlePointerOver(region);
-              }}
-              onPointerOut={handlePointerOut}
-            >
-              <sphereGeometry args={[s[3], 20, 20]} />
-              <meshPhysicalMaterial
-                color={isHovered ? region.color : "#c8c8d8"}
-                metalness={isHovered ? 0.5 : 0.98}
-                roughness={isHovered ? 0.35 : 0.08}
-                clearcoat={1}
-                clearcoatRoughness={0.03}
-                emissive={isHovered ? region.color : "#000000"}
-                emissiveIntensity={isHovered ? 0.5 : 0}
-                envMapIntensity={2.5}
-              />
-            </mesh>
-          );
-        })
-      )}
+      {/* Gyri spheres — smaller, more numerous, tightly packed */}
+      {allSpheres.map((sphere, i) => {
+        const isHovered = hoveredName === sphere.region.name;
+        return (
+          <mesh
+            key={`gyri-${i}`}
+            position={sphere.position}
+            onPointerOver={(e) => {
+              e.stopPropagation();
+              handlePointerOver(sphere.region);
+            }}
+            onPointerOut={handlePointerOut}
+          >
+            <sphereGeometry args={[sphere.radius, 16, 16]} />
+            <meshPhysicalMaterial
+              color={isHovered ? sphere.region.color : "#d0d0e0"}
+              metalness={isHovered ? 0.55 : 0.96}
+              roughness={isHovered ? 0.4 : 0.1}
+              clearcoat={1}
+              clearcoatRoughness={0.02}
+              emissive={isHovered ? sphere.region.color : "#000000"}
+              emissiveIntensity={isHovered ? 0.45 : 0}
+              envMapIntensity={2.2}
+            />
+          </mesh>
+        );
+      })}
 
       {/* Synapse lines */}
       {synapseCurves.map((synapse, i) => (
         <lineSegments key={`synapse-${i}`} geometry={synapse.geometry}>
           <lineBasicMaterial
-            color={isAnyHovered ? synapse.color : "#1e3a5f"}
+            color={isAnyHovered ? synapse.color : "#1a2d4a"}
             transparent
-            opacity={isAnyHovered ? 0.7 : 0.2}
+            opacity={isAnyHovered ? 0.6 : 0.15}
           />
         </lineSegments>
       ))}
@@ -215,7 +232,7 @@ function BrainMesh({ onRegionHover }: BrainMeshProps) {
 // ─── Neural particles ───
 function NeuralParticles({ active }: { active: boolean }) {
   const particlesRef = useRef<THREE.Points>(null);
-  const count = 80;
+  const count = 120;
 
   const particleData = useMemo(() => {
     const positions = new Float32Array(count * 3);
@@ -223,13 +240,13 @@ function NeuralParticles({ active }: { active: boolean }) {
     for (let i = 0; i < count; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
-      const r = 0.9 + Math.random() * 0.6;
+      const r = 0.75 + Math.random() * 0.5;
       positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
       positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       positions[i * 3 + 2] = r * Math.cos(phi);
-      velocities[i * 3] = (Math.random() - 0.5) * 0.003;
-      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.003;
-      velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.003;
+      velocities[i * 3] = (Math.random() - 0.5) * 0.002;
+      velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.002;
+      velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.002;
     }
     return { positions, velocities };
   }, []);
@@ -248,7 +265,7 @@ function NeuralParticles({ active }: { active: boolean }) {
           posArray[i * 3 + 1] ** 2 +
           posArray[i * 3 + 2] ** 2
       );
-      if (dist > 1.8 || dist < 0.7) {
+      if (dist > 1.5 || dist < 0.6) {
         particleData.velocities[i * 3] *= -1;
         particleData.velocities[i * 3 + 1] *= -1;
         particleData.velocities[i * 3 + 2] *= -1;
@@ -257,7 +274,6 @@ function NeuralParticles({ active }: { active: boolean }) {
     particlesRef.current.geometry.attributes.position.needsUpdate = true;
   });
 
-  // Create geometry with args for R3F v9
   const geometry = useMemo(() => {
     const geo = new THREE.BufferGeometry();
     geo.setAttribute(
@@ -270,10 +286,10 @@ function NeuralParticles({ active }: { active: boolean }) {
   return (
     <points ref={particlesRef} geometry={geometry}>
       <pointsMaterial
-        size={0.015}
-        color={active ? "#4dc3ff" : "#2a4a6a"}
+        size={0.012}
+        color={active ? "#4dc3ff" : "#1e3a5c"}
         transparent
-        opacity={active ? 0.9 : 0.4}
+        opacity={active ? 0.8 : 0.3}
         sizeAttenuation
       />
     </points>
@@ -284,18 +300,18 @@ function NeuralParticles({ active }: { active: boolean }) {
 function Scene({ onRegionHover }: { onRegionHover: (region: BrainRegion | null) => void }) {
   return (
     <>
-      <ambientLight intensity={0.25} color="#4dc3ff" />
-      <directionalLight position={[5, 5, 5]} intensity={2.2} color="#ffffff" />
-      <directionalLight position={[-5, 3, -5]} intensity={1.0} color="#4dc3ff" />
-      <directionalLight position={[0, -5, 5]} intensity={1.2} color="#a855f7" />
-      <pointLight position={[0, -3, 2]} intensity={0.6} color="#00a8ff" distance={8} />
+      <ambientLight intensity={0.2} color="#4dc3ff" />
+      <directionalLight position={[5, 5, 5]} intensity={2.0} color="#ffffff" />
+      <directionalLight position={[-5, 3, -5]} intensity={0.9} color="#4dc3ff" />
+      <directionalLight position={[0, -5, 5]} intensity={1.0} color="#a855f7" />
+      <pointLight position={[0, -3, 2]} intensity={0.5} color="#00a8ff" distance={8} />
 
       <BrainMesh onRegionHover={onRegionHover} />
 
       <Environment preset="city" />
       <ContactShadows
-        position={[0, -1.4, 0]}
-        opacity={0.35}
+        position={[0, -1.3, 0]}
+        opacity={0.3}
         scale={4}
         blur={2.5}
         far={4}
@@ -305,10 +321,10 @@ function Scene({ onRegionHover }: { onRegionHover: (region: BrainRegion | null) 
       <OrbitControls
         enableZoom={false}
         enablePan={false}
-        rotateSpeed={0.6}
+        rotateSpeed={0.5}
         autoRotate={false}
-        minPolarAngle={Math.PI * 0.2}
-        maxPolarAngle={Math.PI * 0.8}
+        minPolarAngle={Math.PI * 0.25}
+        maxPolarAngle={Math.PI * 0.75}
       />
     </>
   );
@@ -336,7 +352,7 @@ export default function BrainGlobe() {
 
       {/* 3D Canvas */}
       <Canvas
-        camera={{ position: [0, 0, 2.6], fov: 42 }}
+        camera={{ position: [0, 0, 2.4], fov: 40 }}
         gl={{ antialias: true, alpha: true }}
         style={{ borderRadius: "24px" }}
         onCreated={({ gl }) => {
