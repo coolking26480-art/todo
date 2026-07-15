@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Palette, Layers, Eye, ArrowUpRight, FileText, ExternalLink, X } from "lucide-react";
 
-// ─── YOUR ACTUAL IMAGE PATHS ───
+// ─── ALL YOUR IMAGE PATHS ───
 const projectImages: Record<number, string[]> = {
   1: [
     "/work/tap (1).jpg",
@@ -30,6 +30,24 @@ const projectImages: Record<number, string[]> = {
     "/work/TSF3.png",
     "/work/TSF4.png",
     "/work/TSF5.png",
+  ],
+  4: [
+    "/work/acad (1).png",
+    "/work/acad (2).png",
+    "/work/acad (3).png",
+    "/work/acad (4).png",
+    "/work/acad (5).png",
+    "/work/acad (6).png",
+    "/work/acad (7).png",
+    "/work/acad (8).png",
+    "/work/acad (9).png",
+    "/work/acad (10).png",
+    "/work/acad (11).png",
+    "/work/acad (12).png",
+    "/work/acad (13).png",
+    "/work/acad (14).png",
+    "/work/acad (15).png",
+    "/work/acad (16).png",
   ],
 };
 
@@ -64,6 +82,16 @@ const designs = [
     color: "from-amber-500/10 to-orange-500/10",
     accent: "border-amber-500/20",
   },
+  {
+    id: 4,
+    title: "Academic Projects",
+    category: "FLAME University",
+    year: "2022-2026",
+    description: "Selected academic projects, research posters, and coursework spanning neuroscience, design, and data visualization.",
+    tags: ["Design Thinking", "Gemini AI", "Canva Pro"],
+    color: "from-green-500/10 to-emerald-500/10",
+    accent: "border-green-500/20",
+  },
 ];
 
 const containerVariants = {
@@ -83,31 +111,71 @@ const itemVariants = {
   },
 };
 
-// ─── IMAGE PLACEHOLDER (shown when real image hasn't loaded or doesn't exist) ───
-function WorkImage({ src, alt }: { src: string; alt: string }) {
-  const [error, setError] = useState(false);
+// ─── DYNAMIC COLLAGE IMAGE ───
+// Detects aspect ratio after load and applies smart grid spanning
+function CollageImage({ src, alt, index }: { src: string; alt: string; index: number }) {
+  const [aspect, setAspect] = useState<"portrait" | "landscape" | "square" | "loading">("loading");
+  const imgRef = useRef<HTMLImageElement>(null);
 
-  if (error) {
-    return (
-      <div className="w-full aspect-[4/3] rounded-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center gap-2">
-        <Palette className="w-8 h-8 text-slate-600" />
-        <span className="text-xs text-slate-500 font-mono">{alt}</span>
-      </div>
-    );
-  }
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => {
+      const ratio = img.naturalWidth / img.naturalHeight;
+      if (ratio < 0.75) setAspect("portrait");
+      else if (ratio > 1.4) setAspect("landscape");
+      else setAspect("square");
+    };
+    img.onerror = () => setAspect("square");
+    img.src = src;
+  }, [src]);
+
+  // Dynamic grid classes based on aspect ratio and position
+  const getGridClass = () => {
+    if (aspect === "loading") return "col-span-1 row-span-1";
+    
+    // Portrait (tall) → spans 2 rows, 1 column
+    if (aspect === "portrait") return "col-span-1 row-span-2";
+    
+    // Landscape (wide) → spans 2 columns, 1 row  
+    if (aspect === "landscape") return "col-span-2 row-span-1";
+    
+    // Square → varies by position for visual interest
+    if (index % 5 === 0) return "col-span-1 row-span-1";
+    if (index % 5 === 1) return "col-span-1 row-span-1";
+    if (index % 5 === 2) return "col-span-2 row-span-1";
+    if (index % 5 === 3) return "col-span-1 row-span-2";
+    return "col-span-1 row-span-1";
+  };
+
+  const gridClass = getGridClass();
 
   return (
-    <img
-      src={src}
-      alt={alt}
-      className="w-full h-full object-cover rounded-xl"
-      onError={() => setError(true)}
-      loading="lazy"
-    />
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: index * 0.06, duration: 0.4 }}
+      className={`${gridClass} rounded-xl overflow-hidden bg-white/5 border border-white/10 relative group/image`}
+    >
+      {aspect === "loading" ? (
+        <div className="w-full h-full min-h-[150px] animate-pulse bg-white/5" />
+      ) : (
+        <>
+          <img
+            ref={imgRef}
+            src={src}
+            alt={alt}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover/image:scale-105"
+            loading="lazy"
+          />
+          {/* Subtle hover overlay */}
+          <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/20 transition-colors duration-300" />
+        </>
+      )}
+    </motion.div>
   );
 }
 
-// ─── MODAL COMPONENT ───
+// ─── MODAL COMPONENT WITH DYNAMIC COLLAGE ───
 function ProjectModal({
   project,
   images,
@@ -117,7 +185,6 @@ function ProjectModal({
   images: string[];
   onClose: () => void;
 }) {
-  // Close on Escape key
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -140,29 +207,29 @@ function ProjectModal({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6"
       onClick={onClose}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black/85 backdrop-blur-md" />
 
       {/* Modal Container */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        initial={{ opacity: 0, scale: 0.92, y: 30 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ duration: 0.35, ease: "easeOut" }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-4xl max-h-[85vh] glass-card-strong rounded-2xl overflow-hidden flex flex-col"
+        className="relative w-full max-w-5xl max-h-[90vh] glass-card-strong rounded-2xl overflow-hidden flex flex-col"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 sm:p-6 border-b border-white/10 flex-shrink-0">
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-white/10 flex-shrink-0">
           <div>
-            <h3 className="font-display text-xl sm:text-2xl font-bold text-white">
+            <h3 className="font-display text-lg sm:text-xl font-bold text-white">
               {project.title}
             </h3>
-            <p className="text-sm text-slate-400 font-sans mt-0.5">
-              {project.category} · {project.year}
+            <p className="text-xs text-slate-400 font-sans mt-0.5">
+              {project.category} · {project.year} · {images.length} works
             </p>
           </div>
           <button
@@ -174,23 +241,19 @@ function ProjectModal({
           </button>
         </div>
 
-        {/* Scrollable Image Grid */}
-        <div className="flex-1 overflow-y-auto p-5 sm:p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Scrollable Dynamic Collage Grid */}
+        <div className="flex-1 overflow-y-auto p-3 sm:p-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 auto-rows-[140px] sm:auto-rows-[160px] gap-2 sm:gap-3">
             {images.map((src, i) => (
-              <motion.div
+              <CollageImage
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08, duration: 0.4 }}
-                className={`${i === 0 ? "sm:col-span-2" : ""} aspect-[4/3] rounded-xl overflow-hidden bg-white/5 border border-white/10`}
-              >
-                <WorkImage src={src} alt={`${project.title} — ${i + 1}`} />
-              </motion.div>
+                src={src}
+                alt={`${project.title} — ${i + 1}`}
+                index={i}
+              />
             ))}
           </div>
 
-          {/* Empty state if no images */}
           {images.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 text-slate-500">
               <Palette className="w-12 h-12 mb-3 opacity-30" />
@@ -200,7 +263,7 @@ function ProjectModal({
         </div>
 
         {/* Footer */}
-        <div className="p-4 sm:p-5 border-t border-white/10 flex-shrink-0 text-center">
+        <div className="p-3 sm:p-4 border-t border-white/10 flex-shrink-0 text-center">
           <p className="text-xs text-slate-500 font-mono">
             Press <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-slate-300 text-[10px]">ESC</kbd> or click outside to close
           </p>
@@ -213,7 +276,6 @@ function ProjectModal({
 // ─── MAIN COMPONENT ───
 export default function DesignPortfolio() {
   const [activeProject, setActiveProject] = useState<number | null>(null);
-
   const activeDesign = designs.find((d) => d.id === activeProject);
 
   return (
@@ -233,7 +295,6 @@ export default function DesignPortfolio() {
             </span>
           </div>
 
-          {/* Title row */}
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
               <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight">
@@ -279,11 +340,9 @@ export default function DesignPortfolio() {
                 index === 0 ? "md:col-span-2" : ""
               }`}
             >
-              {/* Gradient Background */}
               <div className={`absolute inset-0 bg-gradient-to-br ${design.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
 
               <div className="relative p-6 sm:p-8">
-                {/* Top Row */}
                 <div className="flex items-start justify-between mb-6">
                   <div className="flex items-center gap-3">
                     <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${design.color} border ${design.accent} flex items-center justify-center`}>
@@ -302,17 +361,14 @@ export default function DesignPortfolio() {
                   </div>
                 </div>
 
-                {/* Title */}
                 <h3 className="font-display text-2xl sm:text-3xl font-bold text-white mb-3 group-hover:text-biolum-200 transition-colors duration-300">
                   {design.title}
                 </h3>
 
-                {/* Description */}
                 <p className="text-slate-400 text-sm leading-relaxed mb-6 font-sans max-w-lg">
                   {design.description}
                 </p>
 
-                {/* Tags */}
                 <div className="flex flex-wrap gap-2">
                   {design.tags.map((tag) => (
                     <span
@@ -324,7 +380,6 @@ export default function DesignPortfolio() {
                   ))}
                 </div>
 
-                {/* Bottom line accent */}
                 <div className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${design.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
               </div>
             </motion.div>
