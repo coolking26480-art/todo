@@ -4,58 +4,54 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Palette, Layers, Eye, ArrowUpRight, FileText, ExternalLink, X } from "lucide-react";
 
-// Define the schema for structured images to prevent layout shifts
 interface PortfolioImage {
   src: string;
-  ratio: number;
-  spanClass: string; // Tailored layout class based on your 11-container breakdown
 }
 
-// ─── THE NEW ALLOCATION MATRIX WITH PRE-BAKED RATIOS ───
-// Maps to the 11 granular ratio classifications to prevent cropping
+// Simplified config: no more aspect matrix span classes needed!
 const projectImages: Record<number, PortfolioImage[]> = {
   1: [
-    { src: "/work/tap (1).jpg", ratio: 0.75, spanClass: "col-span-1 row-span-2" },
-    { src: "/work/tap (2).jpg", ratio: 0.80, spanClass: "col-span-1 row-span-2" },
-    { src: "/work/tap (3).jpg", ratio: 0.75, spanClass: "col-span-1 row-span-2" },
-    { src: "/work/tap (4).jpg", ratio: 0.75, spanClass: "col-span-1 row-span-2" },
-    { src: "/work/tap (5).jpg", ratio: 0.75, spanClass: "col-span-1 row-span-2" },
-    { src: "/work/tap (6).jpg", ratio: 0.80, spanClass: "col-span-1 row-span-2" },
-    { src: "/work/tap (7).jpg", ratio: 0.75, spanClass: "col-span-1 row-span-2" },
-    { src: "/work/tap (8).jpg", ratio: 0.75, spanClass: "col-span-1 row-span-2" },
-    { src: "/work/tap (9).jpg", ratio: 0.75, spanClass: "col-span-1 row-span-2" },
+    { src: "/work/tap (1).jpg" },
+    { src: "/work/tap (2).jpg" },
+    { src: "/work/tap (3).jpg" },
+    { src: "/work/tap (4).jpg" },
+    { src: "/work/tap (5).jpg" },
+    { src: "/work/tap (6).jpg" },
+    { src: "/work/tap (7).jpg" },
+    { src: "/work/tap (8).jpg" },
+    { src: "/work/tap (9).jpg" },
   ],
   2: [
-    { src: "/work/awc1.png", ratio: 1.00, spanClass: "col-span-1 row-span-1" },
-    { src: "/work/awc2.png", ratio: 0.70, spanClass: "col-span-1 row-span-2" },
-    { src: "/work/awc3.png", ratio: 0.80, spanClass: "col-span-1 row-span-2" },
-    { src: "/work/awc4.png", ratio: 1.81, spanClass: "col-span-2 row-span-1" },
-    { src: "/work/awc5.png", ratio: 2.99, spanClass: "col-span-2 row-span-1 md:col-span-3" },
+    { src: "/work/awc1.png" },
+    { src: "/work/awc2.png" },
+    { src: "/work/awc3.png" },
+    { src: "/work/awc4.png" },
+    { src: "/work/awc5.png" },
   ],
   3: [
-    { src: "/work/TSF1.png", ratio: 1.00, spanClass: "col-span-1 row-span-1" },
-    { src: "/work/TSF2.png", ratio: 1.00, spanClass: "col-span-1 row-span-1" },
-    { src: "/work/TSF3.png", ratio: 1.00, spanClass: "col-span-1 row-span-1" },
-    { src: "/work/TSF4.png", ratio: 0.50, spanClass: "col-span-1 row-span-2" },
-    { src: "/work/TSF5.png", ratio: 2.99, spanClass: "col-span-2 row-span-1 md:col-span-3" },
+    { src: "/work/TSF1.png" },
+    { src: "/work/TSF2.png" },
+    { src: "/work/TSF3.png" },
+    { src: "/work/TSF4.png" },
+    { src: "/work/TSF5.png" },
   ],
   4: [
-    { src: "/work/acad (1).png", ratio: 1.05, spanClass: "col-span-1 row-span-1" },
-    { src: "/work/acad (2).png", ratio: 0.77, spanClass: "col-span-1 row-span-2" },
-    { src: "/work/acad (3).png", ratio: 2.19, spanClass: "col-span-2 row-span-1" },
-    { src: "/work/acad (4).png", ratio: 0.71, spanClass: "col-span-1 row-span-2" },
-    { src: "/work/acad (5).png", ratio: 0.71, spanClass: "col-span-1 row-span-2" },
-    { src: "/work/acad (6).png", ratio: 1.37, spanClass: "col-span-2 row-span-1" },
-    { src: "/work/acad (7).png", ratio: 1.33, spanClass: "col-span-2 row-span-1" },
-    { src: "/work/acad (8).png", ratio: 1.00, spanClass: "col-span-1 row-span-1" },
-    { src: "/work/acad (9).png", ratio: 1.00, spanClass: "col-span-1 row-span-1" },
-    { src: "/work/acad (10).png", ratio: 1.79, spanClass: "col-span-2 row-span-1" },
-    { src: "/work/acad (11).png", ratio: 1.86, spanClass: "col-span-2 row-span-1" },
-    { src: "/work/acad (12).png", ratio: 1.80, spanClass: "col-span-2 row-span-1" },
-    { src: "/work/acad (13).png", ratio: 1.77, spanClass: "col-span-2 row-span-1" },
-    { src: "/work/acad (14).png", ratio: 1.80, spanClass: "col-span-2 row-span-1" },
-    { src: "/work/acad (15).png", ratio: 1.46, spanClass: "col-span-2 row-span-1" },
-    { src: "/work/acad (16).png", ratio: 7.53, spanClass: "col-span-2 sm:col-span-3 md:col-span-4 row-span-1" },
+    { src: "/work/acad (1).png" },
+    { src: "/work/acad (2).png" },
+    { src: "/work/acad (3).png" },
+    { src: "/work/acad (4).png" },
+    { src: "/work/acad (5).png" },
+    { src: "/work/acad (6).png" },
+    { src: "/work/acad (7).png" },
+    { src: "/work/acad (8).png" },
+    { src: "/work/acad (9).png" },
+    { src: "/work/acad (10).png" },
+    { src: "/work/acad (11).png" },
+    { src: "/work/acad (12).png" },
+    { src: "/work/acad (13).png" },
+    { src: "/work/acad (14).png" },
+    { src: "/work/acad (15).png" },
+    { src: "/work/acad (16).png" },
   ],
 };
 
@@ -119,29 +115,26 @@ const itemVariants = {
   },
 };
 
-// ─── STATICALLY ALLOCATED COLLAGE IMAGE ───
-// Uses container sizing logic to cleanly preserve structural integrity and prevent dynamic layout shifting
 function CollageImage({ image, alt, index }: { image: PortfolioImage; alt: string; index: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: index * 0.04, duration: 0.35 }}
-      className={`${image.spanClass} rounded-xl overflow-hidden bg-white/5 border border-white/10 relative group/image flex items-center justify-center`}
+      // break-inside-avoid prevents items from cutting off in half across columns
+      className="break-inside-avoid mb-4 rounded-xl overflow-hidden bg-white/5 border border-white/10 relative group/image w-full"
     >
       <img
         src={image.src}
         alt={alt}
-        className="w-full h-full object-contain bg-neutral-950/40 transition-transform duration-500 group-hover/image:scale-[1.02]"
+        className="w-full h-auto object-contain transition-transform duration-500 group-hover/image:scale-[1.02]"
         loading="lazy"
       />
-      {/* Subtle hover overlay */}
       <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/10 transition-colors duration-300 pointer-events-none" />
     </motion.div>
   );
 }
 
-// ─── MODAL COMPONENT WITH DYNAMIC COLLAGE ───
 function ProjectModal({
   project,
   images,
@@ -176,10 +169,8 @@ function ProjectModal({
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6"
       onClick={onClose}
     >
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-black/90 backdrop-blur-md" />
 
-      {/* Modal Container */}
       <motion.div
         initial={{ opacity: 0, scale: 0.96, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -207,10 +198,9 @@ function ProjectModal({
           </button>
         </div>
 
-        {/* Scrollable Dynamic Collage Grid */}
+        {/* Dynamic Column Masonry Content Area */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-          {/* Main layout framework is an explicit 4-column tracks setup with micro row dimensions to tightly frame aspect items */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 auto-rows-[160px] sm:auto-rows-[180px] md:auto-rows-[200px] gap-3 sm:gap-4">
+          <div className="columns-2 sm:columns-3 md:columns-4 gap-4 space-y-4">
             {images.map((img, i) => (
               <CollageImage
                 key={i}
@@ -228,19 +218,11 @@ function ProjectModal({
             </div>
           )}
         </div>
-
-        {/* Footer */}
-        <div className="p-3 sm:p-4 border-t border-white/10 flex-shrink-0 text-center bg-black/20">
-          <p className="text-xs text-slate-500 font-mono">
-            Press <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-slate-300 text-[10px]">ESC</kbd> or click outside to close
-          </p>
-        </div>
       </motion.div>
     </motion.div>
   );
 }
 
-// ─── MAIN COMPONENT ───
 export default function DesignPortfolio() {
   const [activeProject, setActiveProject] = useState<number | null>(null);
   const activeDesign = designs.find((d) => d.id === activeProject);
@@ -374,7 +356,6 @@ export default function DesignPortfolio() {
         </motion.div>
       </div>
 
-      {/* Modal View */}
       <AnimatePresence>
         {activeProject !== null && activeDesign && (
           <ProjectModal
