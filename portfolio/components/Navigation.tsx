@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, Code2, Palette, BookOpen, User } from "lucide-react";
+import { Menu, X, Brain, Code2, Palette, BookOpen, User } from "lucide-react";
 import NavRippleCanvas from "./NavRippleCanvas";
 
 interface NavigationProps {
@@ -12,13 +12,14 @@ interface NavigationProps {
 
 const navItems = [
   { id: "home", label: "Home", icon: Brain },
-  { id: "about", label: "About", icon: User },
+  { id: "about", label: "About Me", icon: User },
   { id: "design", label: "Design", icon: Palette },
-  { id: "code", label: "Projects", icon: Code2 },
-  { id: "substack", label: "Writing", icon: BookOpen },
+  { id: "code", label: "Neuro Projects", icon: Code2 },
+  { id: "substack", label: "Substack", icon: BookOpen },
 ];
 
 export default function Navigation({ activeView, onNavigate }: NavigationProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
   const navBarRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
 
@@ -109,71 +110,91 @@ export default function Navigation({ activeView, onNavigate }: NavigationProps) 
         </div>
       </nav>
 
-      {/* MOBILE: Bottom tab bar */}
-      <nav className="fixed bottom-4 left-4 right-4 z-50 md:hidden">
-        <div
-          className="relative flex items-center justify-around h-16 rounded-2xl overflow-hidden px-2"
-          style={{
-            background: `
-              linear-gradient(180deg, rgba(20,28,48,0.85) 0%, rgba(10,14,26,0.9) 100%)
-            `,
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            boxShadow: `
-              inset 0 1px 1px rgba(255,255,255,0.1),
-              0 -4px 24px rgba(0,0,0,0.3),
-              0 0 0 1px rgba(255,255,255,0.06)
-            `,
-          }}
-        >
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeView === item.id;
-            return (
-              <motion.button
-                key={item.id}
-                onClick={() => onNavigate(item.id)}
-                className="relative flex flex-col items-center justify-center gap-0.5 py-2 px-3 min-w-[56px]"
-                whileTap={{ scale: 0.9 }}
-              >
-                <div className="relative">
-                  <Icon
-                    size={20}
-                    strokeWidth={isActive ? 2.5 : 1.5}
-                    className={`transition-colors duration-200 ${
-                      isActive ? "text-biolum-400" : "text-white/40"
-                    }`}
-                  />
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeMobileNav"
-                      className="absolute -inset-2 rounded-full"
-                      style={{
-                        background: "rgba(0, 168, 255, 0.1)",
-                        border: "1px solid rgba(0, 168, 255, 0.2)",
-                      }}
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                </div>
-                <span
-                  className={`text-[10px] font-medium transition-colors duration-200 ${
-                    isActive ? "text-biolum-300" : "text-white/40"
-                  }`}
-                >
-                  {item.label}
-                </span>
-                {isActive && (
-                  <motion.div
-                    className="absolute -top-0.5 w-1 h-1 rounded-full bg-biolum-400"
-                    layoutId="activeMobileDot"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-              </motion.button>
-            );
-          })}
+      {/* MOBILE: Hamburger at top (same position as desktop) */}
+      <nav className="fixed top-5 left-0 right-0 z-50 flex md:hidden justify-center px-4">
+        <div className="w-full max-w-xl">
+          <div
+            className="relative flex items-center justify-between h-14 px-4 rounded-full overflow-hidden"
+            style={{
+              background: `
+                linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%),
+                linear-gradient(180deg, rgba(10,14,26,0.6) 0%, rgba(20,28,48,0.5) 100%)
+              `,
+              boxShadow: `
+                inset 0 1px 1px rgba(255,255,255,0.15),
+                inset 0 -1px 1px rgba(0,0,0,0.3),
+                0 8px 32px rgba(0,0,0,0.4),
+                0 2px 8px rgba(0,0,0,0.3),
+                0 0 0 1px rgba(255,255,255,0.06)
+              `,
+            }}
+          >
+            {/* Logo for mobile */}
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-biolum-400 to-biolum-600 flex items-center justify-center shadow-[0_0_12px_rgba(0,168,255,0.3)]">
+                <span className="text-white font-bold text-xs font-display">SJ</span>
+              </div>
+              <span className="text-white/90 font-display font-semibold text-sm tracking-wide">
+                Sujal
+              </span>
+            </div>
+
+            {/* Hamburger toggle */}
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="p-1.5 rounded-full text-white/50 hover:text-white hover:bg-white/5 transition-colors"
+            >
+              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Dropdown Menu */}
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className="absolute top-20 left-4 right-4 rounded-2xl overflow-hidden"
+              style={{
+                background: "linear-gradient(180deg, rgba(20,28,48,0.8) 0%, rgba(10,14,26,0.9) 100%)",
+                backdropFilter: "blur(24px)",
+                WebkitBackdropFilter: "blur(24px)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                boxShadow: "0 16px 48px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1)",
+              }}
+            >
+              <div className="p-2 space-y-0.5">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activeView === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        onNavigate(item.id);
+                        setMobileOpen(false);
+                      }}
+                      className={`w-full px-4 py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center gap-3 ${
+                        isActive
+                          ? "text-biolum-300"
+                          : "text-white/50 hover:text-white"
+                      }`}
+                      style={isActive ? {
+                        background: "rgba(0, 168, 255, 0.08)",
+                      } : {}}
+                    >
+                      <Icon size={16} strokeWidth={isActive ? 2.5 : 1.5} />
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     </>
   );
