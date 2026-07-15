@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Palette, Layers, Eye, ArrowUpRight, FileText, ExternalLink, X } from "lucide-react";
 
-// ─── ALL YOUR IMAGE PATHS ───
+// ─── ALL IMAGE PATHS ───
 const projectImages: Record<number, string[]> = {
   1: [
     "/work/tap (1).jpg",
@@ -111,40 +111,65 @@ const itemVariants = {
   },
 };
 
-// ─── DYNAMIC COLLAGE IMAGE ───
-// Detects aspect ratio after load and applies smart grid spanning
+// ─── 7-CONTAINER DYNAMIC COLLAGE IMAGE ───
 function CollageImage({ src, alt, index }: { src: string; alt: string; index: number }) {
-  const [aspect, setAspect] = useState<"portrait" | "landscape" | "square" | "loading">("loading");
+  type ImageShape =
+    | "tall-portrait"   // Ratio <= 0.60
+    | "portrait"        // Ratio > 0.60 && <= 0.85
+    | "square"          // Ratio > 0.85 && <= 1.15
+    | "landscape"       // Ratio > 1.15 && <= 1.50
+    | "wide"            // Ratio > 1.50 && <= 2.00
+    | "very-wide"       // Ratio > 2.00 && <= 4.00
+    | "extreme-banner"  // Ratio > 4.00
+    | "loading";
+
+  const [shape, setShape] = useState<ImageShape>("loading");
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const img = new Image();
     img.onload = () => {
       const ratio = img.naturalWidth / img.naturalHeight;
-      if (ratio < 0.75) setAspect("portrait");
-      else if (ratio > 1.4) setAspect("landscape");
-      else setAspect("square");
+      
+      if (ratio <= 0.60) {
+        setShape("tall-portrait");
+      } else if (ratio > 0.60 && ratio <= 0.85) {
+        setShape("portrait");
+      } else if (ratio > 0.85 && ratio <= 1.15) {
+        setShape("square");
+      } else if (ratio > 1.15 && ratio <= 1.50) {
+        setShape("landscape");
+      } else if (ratio > 1.50 && ratio <= 2.00) {
+        setShape("wide");
+      } else if (ratio > 2.00 && ratio <= 4.00) {
+        setShape("very-wide");
+      } else {
+        setShape("extreme-banner");
+      }
     };
-    img.onerror = () => setAspect("square");
+    img.onerror = () => setShape("square");
     img.src = src;
   }, [src]);
 
-  // Dynamic grid classes based on aspect ratio and position
+  // Maps the 7 dynamic ratio tags strictly into optimal Tailwind Grid layouts
   const getGridClass = () => {
-    if (aspect === "loading") return "col-span-1 row-span-1";
-    
-    // Portrait (tall) → spans 2 rows, 1 column
-    if (aspect === "portrait") return "col-span-1 row-span-2";
-    
-    // Landscape (wide) → spans 2 columns, 1 row  
-    if (aspect === "landscape") return "col-span-2 row-span-1";
-    
-    // Square → varies by position for visual interest
-    if (index % 5 === 0) return "col-span-1 row-span-1";
-    if (index % 5 === 1) return "col-span-1 row-span-1";
-    if (index % 5 === 2) return "col-span-2 row-span-1";
-    if (index % 5 === 3) return "col-span-1 row-span-2";
-    return "col-span-1 row-span-1";
+    switch (shape) {
+      case "loading":
+        return "col-span-1 row-span-1";
+      case "tall-portrait":
+      case "portrait":
+        return "col-span-1 row-span-2";
+      case "square":
+        return "col-span-1 row-span-1";
+      case "landscape":
+      case "wide":
+      case "very-wide":
+        return "col-span-2 row-span-1";
+      case "extreme-banner":
+        return "col-span-2 sm:col-span-3 md:col-span-4 row-span-1";
+      default:
+        return "col-span-1 row-span-1";
+    }
   };
 
   const gridClass = getGridClass();
@@ -153,10 +178,10 @@ function CollageImage({ src, alt, index }: { src: string; alt: string; index: nu
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: index * 0.06, duration: 0.4 }}
-      className={`${gridClass} rounded-xl overflow-hidden bg-white/5 border border-white/10 relative group/image`}
+      transition={{ delay: index * 0.04, duration: 0.4 }}
+      className={`${gridClass} rounded-xl overflow-hidden bg-white/5 border border-white/10 relative group/image transition-all duration-300`}
     >
-      {aspect === "loading" ? (
+      {shape === "loading" ? (
         <div className="w-full h-full min-h-[150px] animate-pulse bg-white/5" />
       ) : (
         <>
@@ -167,7 +192,6 @@ function CollageImage({ src, alt, index }: { src: string; alt: string; index: nu
             className="w-full h-full object-cover transition-transform duration-500 group-hover/image:scale-105"
             loading="lazy"
           />
-          {/* Subtle hover overlay */}
           <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/20 transition-colors duration-300" />
         </>
       )}
@@ -175,7 +199,7 @@ function CollageImage({ src, alt, index }: { src: string; alt: string; index: nu
   );
 }
 
-// ─── MODAL COMPONENT WITH DYNAMIC COLLAGE ───
+// ─── MODAL COMPONENT WITH AUTO-FITTING COLLAGE ───
 function ProjectModal({
   project,
   images,
@@ -241,9 +265,9 @@ function ProjectModal({
           </button>
         </div>
 
-        {/* Scrollable Dynamic Collage Grid */}
+        {/* Dynamic Multi-span Masonry Grid Container */}
         <div className="flex-1 overflow-y-auto p-3 sm:p-5">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 auto-rows-[140px] sm:auto-rows-[160px] gap-2 sm:gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 auto-rows-[140px] sm:auto-rows-[160px] gap-2 sm:gap-3 grid-flow-row-dense">
             {images.map((src, i) => (
               <CollageImage
                 key={i}
@@ -273,7 +297,7 @@ function ProjectModal({
   );
 }
 
-// ─── MAIN COMPONENT ───
+// ─── MAIN PORTFOLIO SHEET COMPONENT ───
 export default function DesignPortfolio() {
   const [activeProject, setActiveProject] = useState<number | null>(null);
   const activeDesign = designs.find((d) => d.id === activeProject);
@@ -281,7 +305,7 @@ export default function DesignPortfolio() {
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+        {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -323,7 +347,7 @@ export default function DesignPortfolio() {
           </div>
         </motion.div>
 
-        {/* Swiss Grid Layout */}
+        {/* Swiss Grid Board Grid */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -386,7 +410,7 @@ export default function DesignPortfolio() {
           ))}
         </motion.div>
 
-        {/* Design Philosophy */}
+        {/* Creative Competencies Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -407,7 +431,7 @@ export default function DesignPortfolio() {
         </motion.div>
       </div>
 
-      {/* Modal */}
+      {/* Dynamic Overlay Sheet View */}
       <AnimatePresence>
         {activeProject !== null && activeDesign && (
           <ProjectModal
