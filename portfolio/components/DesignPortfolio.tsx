@@ -135,6 +135,7 @@ function CollageImage({ image, alt, index }: { image: PortfolioImage; alt: strin
   );
 }
 
+// ─── MODAL COMPONENT WITH DYNAMIC COLLAGE ───
 function ProjectModal({
   project,
   images,
@@ -179,7 +180,7 @@ function ProjectModal({
         onClick={(e) => e.stopPropagation()}
         className="relative w-full max-w-6xl max-h-[92vh] glass-card-strong rounded-2xl overflow-hidden flex flex-col"
       >
-        {/* Header */}
+        {/* Header with Expanded X Trigger Target */}
         <div className="flex items-center justify-between p-4 sm:p-5 border-b border-white/10 flex-shrink-0">
           <div>
             <h3 className="font-display text-lg sm:text-xl font-bold text-white">
@@ -191,7 +192,7 @@ function ProjectModal({
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+            className="p-4 -m-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
