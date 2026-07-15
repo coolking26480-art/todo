@@ -50,7 +50,7 @@ export default function NavRippleCanvas({ containerRef }: NavRippleCanvasProps) 
         x,
         y,
         birth: performance.now(),
-        amplitude: isClick ? 0.5 : 0.25,
+        amplitude: isClick ? 0.6 : 0.3,
         frequency: isClick ? 0.08 : 0.12,
         speed: isClick ? 1.5 : 2.5,
         decay: isClick ? 0.985 : 0.96,
@@ -77,7 +77,7 @@ export default function NavRippleCanvas({ containerRef }: NavRippleCanvasProps) 
         (x - mouseRef.current.prevX) ** 2 + (y - mouseRef.current.prevY) ** 2
       );
 
-      if (dist > 8 && now - lastMoveRef.current > 16) {
+      if (dist > 6 && now - lastMoveRef.current > 30) {
         spawnRipple(x, y, false);
         lastMoveRef.current = now;
       }
@@ -93,7 +93,7 @@ export default function NavRippleCanvas({ containerRef }: NavRippleCanvasProps) 
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       spawnRipple(x, y, true);
-      setTimeout(() => spawnRipple(x, y, true), 80);
+      setTimeout(() => spawnRipple(x, y, true), 120);
     };
 
     container.addEventListener("mousemove", handleMouseMove);
@@ -116,38 +116,44 @@ export default function NavRippleCanvas({ containerRef }: NavRippleCanvasProps) 
       for (let i = ripples.length - 1; i >= 0; i--) {
         const r = ripples[i];
         const age = now - r.birth;
-        const radius = age * r.speed * 0.15;
-        const alive = r.amplitude > 0.005;
+        const radius = age * r.speed * 0.12;
+        const alive = r.amplitude > 0.008;
 
         if (!alive) {
           ripples.splice(i, 1);
           continue;
         }
 
-        // Main ring
-        ctx.beginPath();
-        const gradient = ctx.createRadialGradient(r.x, r.y, radius * 0.8, r.x, r.y, radius * 1.2);
-        gradient.addColorStop(0, "rgba(0, 200, 255, 0)");
-        gradient.addColorStop(0.5, `rgba(0, 200, 255, ${r.amplitude * 0.15})`);
-        gradient.addColorStop(1, "rgba(0, 200, 255, 0)");
+        // Organic wave distortion — multiple sine waves
+        const distortion = Math.sin(age * r.frequency * 2) * r.amplitude * 8;
+        const distortedRadius = radius + distortion;
 
-        ctx.strokeStyle = `rgba(0, 200, 255, ${r.amplitude * 0.3})`;
-        ctx.lineWidth = 1.5;
-        ctx.arc(r.x, r.y, radius, 0, Math.PI * 2);
+        // Main ring with soft glow
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(0, 220, 255, ${r.amplitude * 0.25})`;
+        ctx.lineWidth = 1.2;
+        ctx.arc(r.x, r.y, distortedRadius, 0, Math.PI * 2);
         ctx.stroke();
 
-        // Inner glow
+        // Inner soft fill
+        const innerGrad = ctx.createRadialGradient(
+          r.x, r.y, distortedRadius * 0.7,
+          r.x, r.y, distortedRadius * 1.1
+        );
+        innerGrad.addColorStop(0, `rgba(0, 220, 255, 0)`);
+        innerGrad.addColorStop(0.5, `rgba(0, 220, 255, ${r.amplitude * 0.06})`);
+        innerGrad.addColorStop(1, `rgba(0, 220, 255, 0)`);
         ctx.beginPath();
-        ctx.fillStyle = gradient;
-        ctx.arc(r.x, r.y, radius * 1.2, 0, Math.PI * 2);
+        ctx.fillStyle = innerGrad;
+        ctx.arc(r.x, r.y, distortedRadius * 1.1, 0, Math.PI * 2);
         ctx.fill();
 
-        // Secondary ring for clicks
+        // Secondary concentric ring for clicks
         if (r.isClick) {
-          const ring2 = radius * 0.6;
+          const ring2 = distortedRadius * 0.55;
           ctx.beginPath();
-          ctx.strokeStyle = `rgba(0, 200, 255, ${r.amplitude * 0.2})`;
-          ctx.lineWidth = 1;
+          ctx.strokeStyle = `rgba(0, 220, 255, ${r.amplitude * 0.15})`;
+          ctx.lineWidth = 0.8;
           ctx.arc(r.x, r.y, ring2, 0, Math.PI * 2);
           ctx.stroke();
         }
