@@ -16,7 +16,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   return (
     <div className="min-h-screen flex flex-col relative">
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-12 pb-6">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 md:pt-12 pb-6">
         {/* Neuron Image with Video Overlay */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -24,7 +24,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative w-full max-w-3xl mx-auto"
         >
-          <div ref={containerRef} className="relative aspect-[16/9] w-full rounded-3xl overflow-hidden">
+          <div ref={containerRef} className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden">
             {/* Static fallback image — always visible underneath */}
             <Image
               src="/images/neurons.png"
@@ -96,7 +96,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.0, duration: 0.8 }}
-        className="w-full py-2 px-4 sm:px-6 lg:px-8"
+        className="w-full py-6 px-4 sm:px-6 lg:px-8"
       >
         <div className="max-w-7xl mx-auto">
           <div className="swiss-line mb-4" />
