@@ -167,11 +167,20 @@ function ProjectModal({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
-      // Increased z-index dramatically to guarantee it forces above your site's main navbar/menu elements
-      className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6"
+      // Fixed at z-[9999] to decisively overpower any site-wide navigation layers
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6"
       onClick={onClose}
     >
       <div className="absolute inset-0 bg-black/95 backdrop-blur-md" />
+
+      {/* Standalone Close Button forced onto the absolute top layer */}
+      <button
+        onClick={onClose}
+        className="fixed top-6 right-6 z-[10000] p-3 rounded-full text-white bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 shadow-xl transition-all cursor-pointer flex items-center justify-center w-12 h-12 sm:hidden"
+        aria-label="Close Modal"
+      >
+        <X className="w-6 h-6 flex-shrink-0" />
+      </button>
 
       <motion.div
         initial={{ opacity: 0, scale: 0.96, y: 20 }}
@@ -181,9 +190,9 @@ function ProjectModal({
         onClick={(e) => e.stopPropagation()}
         className="relative w-full max-w-6xl max-h-[92vh] glass-card-strong rounded-2xl overflow-hidden flex flex-col"
       >
-        {/* Header Layout Optimized for Mobile and Web Viewports */}
-        <div className="flex items-start justify-between p-4 sm:p-5 border-b border-white/10 flex-shrink-0 gap-4">
-          <div className="flex-1 min-w-0 pr-6 sm:pr-0">
+        {/* Header Layout */}
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-white/10 flex-shrink-0 gap-4">
+          <div className="flex-1 min-w-0 pr-12 sm:pr-0">
             <h3 className="font-display text-lg sm:text-xl font-bold text-white leading-snug break-words">
               {project.title}
             </h3>
@@ -192,11 +201,11 @@ function ProjectModal({
             </p>
           </div>
           
-          {/* Isolated, highly-elevated close trigger area away from navigation zones */}
-          <div className="absolute top-3 right-3 sm:relative sm:top-0 sm:right-0 z-[110] flex items-center justify-center flex-shrink-0">
+          {/* Desktop Close Button (hidden on mobile) */}
+          <div className="hidden sm:flex items-center justify-center flex-shrink-0">
             <button
               onClick={onClose}
-              className="p-3 rounded-full sm:rounded-xl text-slate-400 hover:text-white bg-white/5 sm:bg-transparent hover:bg-white/10 transition-all cursor-pointer flex items-center justify-center w-11 h-11 border border-white/5 sm:border-transparent"
+              className="p-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer flex items-center justify-center w-11 h-11"
               aria-label="Close"
             >
               <X className="w-5 h-5 flex-shrink-0" />
@@ -228,6 +237,7 @@ function ProjectModal({
     </motion.div>
   );
 }
+
 
 export default function DesignPortfolio() {
   const [activeProject, setActiveProject] = useState<number | null>(null);
