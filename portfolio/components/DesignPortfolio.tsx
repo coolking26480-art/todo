@@ -1,53 +1,61 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Palette, Layers, Eye, ArrowUpRight, FileText, ExternalLink, X } from "lucide-react";
 
-// ─── ALL IMAGE PATHS ───
-const projectImages: Record<number, string[]> = {
+// Define the schema for structured images to prevent layout shifts
+interface PortfolioImage {
+  src: string;
+  ratio: number;
+  spanClass: string; // Tailored layout class based on your 11-container breakdown
+}
+
+// ─── THE NEW ALLOCATION MATRIX WITH PRE-BAKED RATIOS ───
+// Maps to the 11 granular ratio classifications to prevent cropping
+const projectImages: Record<number, PortfolioImage[]> = {
   1: [
-    "/work/tap (1).jpg",
-    "/work/tap (2).jpg",
-    "/work/tap (3).jpg",
-    "/work/tap (4).jpg",
-    "/work/tap (5).jpg",
-    "/work/tap (6).jpg",
-    "/work/tap (7).jpg",
-    "/work/tap (8).jpg",
-    "/work/tap (9).jpg",
+    { src: "/work/tap (1).jpg", ratio: 0.75, spanClass: "col-span-1 row-span-2" },
+    { src: "/work/tap (2).jpg", ratio: 0.80, spanClass: "col-span-1 row-span-2" },
+    { src: "/work/tap (3).jpg", ratio: 0.75, spanClass: "col-span-1 row-span-2" },
+    { src: "/work/tap (4).jpg", ratio: 0.75, spanClass: "col-span-1 row-span-2" },
+    { src: "/work/tap (5).jpg", ratio: 0.75, spanClass: "col-span-1 row-span-2" },
+    { src: "/work/tap (6).jpg", ratio: 0.80, spanClass: "col-span-1 row-span-2" },
+    { src: "/work/tap (7).jpg", ratio: 0.75, spanClass: "col-span-1 row-span-2" },
+    { src: "/work/tap (8).jpg", ratio: 0.75, spanClass: "col-span-1 row-span-2" },
+    { src: "/work/tap (9).jpg", ratio: 0.75, spanClass: "col-span-1 row-span-2" },
   ],
   2: [
-    "/work/awc1.png",
-    "/work/awc2.png",
-    "/work/awc3.png",
-    "/work/awc4.png",
-    "/work/awc5.png",
+    { src: "/work/awc1.png", ratio: 1.00, spanClass: "col-span-1 row-span-1" },
+    { src: "/work/awc2.png", ratio: 0.70, spanClass: "col-span-1 row-span-2" },
+    { src: "/work/awc3.png", ratio: 0.80, spanClass: "col-span-1 row-span-2" },
+    { src: "/work/awc4.png", ratio: 1.81, spanClass: "col-span-2 row-span-1" },
+    { src: "/work/awc5.png", ratio: 2.99, spanClass: "col-span-2 row-span-1 md:col-span-3" },
   ],
   3: [
-    "/work/TSF1.png",
-    "/work/TSF2.png",
-    "/work/TSF3.png",
-    "/work/TSF4.png",
-    "/work/TSF5.png",
+    { src: "/work/TSF1.png", ratio: 1.00, spanClass: "col-span-1 row-span-1" },
+    { src: "/work/TSF2.png", ratio: 1.00, spanClass: "col-span-1 row-span-1" },
+    { src: "/work/TSF3.png", ratio: 1.00, spanClass: "col-span-1 row-span-1" },
+    { src: "/work/TSF4.png", ratio: 0.50, spanClass: "col-span-1 row-span-2" },
+    { src: "/work/TSF5.png", ratio: 2.99, spanClass: "col-span-2 row-span-1 md:col-span-3" },
   ],
   4: [
-    "/work/acad (1).png",
-    "/work/acad (2).png",
-    "/work/acad (3).png",
-    "/work/acad (4).png",
-    "/work/acad (5).png",
-    "/work/acad (6).png",
-    "/work/acad (7).png",
-    "/work/acad (8).png",
-    "/work/acad (9).png",
-    "/work/acad (10).png",
-    "/work/acad (11).png",
-    "/work/acad (12).png",
-    "/work/acad (13).png",
-    "/work/acad (14).png",
-    "/work/acad (15).png",
-    "/work/acad (16).png",
+    { src: "/work/acad (1).png", ratio: 1.05, spanClass: "col-span-1 row-span-1" },
+    { src: "/work/acad (2).png", ratio: 0.77, spanClass: "col-span-1 row-span-2" },
+    { src: "/work/acad (3).png", ratio: 2.19, spanClass: "col-span-2 row-span-1" },
+    { src: "/work/acad (4).png", ratio: 0.71, spanClass: "col-span-1 row-span-2" },
+    { src: "/work/acad (5).png", ratio: 0.71, spanClass: "col-span-1 row-span-2" },
+    { src: "/work/acad (6).png", ratio: 1.37, spanClass: "col-span-2 row-span-1" },
+    { src: "/work/acad (7).png", ratio: 1.33, spanClass: "col-span-2 row-span-1" },
+    { src: "/work/acad (8).png", ratio: 1.00, spanClass: "col-span-1 row-span-1" },
+    { src: "/work/acad (9).png", ratio: 1.00, spanClass: "col-span-1 row-span-1" },
+    { src: "/work/acad (10).png", ratio: 1.79, spanClass: "col-span-2 row-span-1" },
+    { src: "/work/acad (11).png", ratio: 1.86, spanClass: "col-span-2 row-span-1" },
+    { src: "/work/acad (12).png", ratio: 1.80, spanClass: "col-span-2 row-span-1" },
+    { src: "/work/acad (13).png", ratio: 1.77, spanClass: "col-span-2 row-span-1" },
+    { src: "/work/acad (14).png", ratio: 1.80, spanClass: "col-span-2 row-span-1" },
+    { src: "/work/acad (15).png", ratio: 1.46, spanClass: "col-span-2 row-span-1" },
+    { src: "/work/acad (16).png", ratio: 7.53, spanClass: "col-span-2 sm:col-span-3 md:col-span-4 row-span-1" },
   ],
 };
 
@@ -111,102 +119,36 @@ const itemVariants = {
   },
 };
 
-// ─── 7-CONTAINER DYNAMIC COLLAGE IMAGE ───
-function CollageImage({ src, alt, index }: { src: string; alt: string; index: number }) {
-  type ImageShape =
-    | "tall-portrait"   // Ratio <= 0.60
-    | "portrait"        // Ratio > 0.60 && <= 0.85
-    | "square"          // Ratio > 0.85 && <= 1.15
-    | "landscape"       // Ratio > 1.15 && <= 1.50
-    | "wide"            // Ratio > 1.50 && <= 2.00
-    | "very-wide"       // Ratio > 2.00 && <= 4.00
-    | "extreme-banner"  // Ratio > 4.00
-    | "loading";
-
-  const [shape, setShape] = useState<ImageShape>("loading");
-  const imgRef = useRef<HTMLImageElement>(null);
-
-  useEffect(() => {
-    const img = new Image();
-    img.onload = () => {
-      const ratio = img.naturalWidth / img.naturalHeight;
-      
-      if (ratio <= 0.60) {
-        setShape("tall-portrait");
-      } else if (ratio > 0.60 && ratio <= 0.85) {
-        setShape("portrait");
-      } else if (ratio > 0.85 && ratio <= 1.15) {
-        setShape("square");
-      } else if (ratio > 1.15 && ratio <= 1.50) {
-        setShape("landscape");
-      } else if (ratio > 1.50 && ratio <= 2.00) {
-        setShape("wide");
-      } else if (ratio > 2.00 && ratio <= 4.00) {
-        setShape("very-wide");
-      } else {
-        setShape("extreme-banner");
-      }
-    };
-    img.onerror = () => setShape("square");
-    img.src = src;
-  }, [src]);
-
-  // Maps the 7 dynamic ratio tags strictly into optimal Tailwind Grid layouts
-  const getGridClass = () => {
-    switch (shape) {
-      case "loading":
-        return "col-span-1 row-span-1";
-      case "tall-portrait":
-      case "portrait":
-        return "col-span-1 row-span-2";
-      case "square":
-        return "col-span-1 row-span-1";
-      case "landscape":
-      case "wide":
-      case "very-wide":
-        return "col-span-2 row-span-1";
-      case "extreme-banner":
-        return "col-span-2 sm:col-span-3 md:col-span-4 row-span-1";
-      default:
-        return "col-span-1 row-span-1";
-    }
-  };
-
-  const gridClass = getGridClass();
-
+// ─── STATICALLY ALLOCATED COLLAGE IMAGE ───
+// Uses container sizing logic to cleanly preserve structural integrity and prevent dynamic layout shifting
+function CollageImage({ image, alt, index }: { image: PortfolioImage; alt: string; index: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
+      initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: index * 0.04, duration: 0.4 }}
-      className={`${gridClass} rounded-xl overflow-hidden bg-white/5 border border-white/10 relative group/image transition-all duration-300`}
+      transition={{ delay: index * 0.04, duration: 0.35 }}
+      className={`${image.spanClass} rounded-xl overflow-hidden bg-white/5 border border-white/10 relative group/image flex items-center justify-center`}
     >
-      {shape === "loading" ? (
-        <div className="w-full h-full min-h-[150px] animate-pulse bg-white/5" />
-      ) : (
-        <>
-          <img
-            ref={imgRef}
-            src={src}
-            alt={alt}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover/image:scale-105"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/20 transition-colors duration-300" />
-        </>
-      )}
+      <img
+        src={image.src}
+        alt={alt}
+        className="w-full h-full object-contain bg-neutral-950/40 transition-transform duration-500 group-hover/image:scale-[1.02]"
+        loading="lazy"
+      />
+      {/* Subtle hover overlay */}
+      <div className="absolute inset-0 bg-black/0 group-hover/image:bg-black/10 transition-colors duration-300 pointer-events-none" />
     </motion.div>
   );
 }
 
-// ─── MODAL COMPONENT WITH AUTO-FITTING COLLAGE ───
+// ─── MODAL COMPONENT WITH DYNAMIC COLLAGE ───
 function ProjectModal({
   project,
   images,
   onClose,
 }: {
   project: (typeof designs)[0];
-  images: string[];
+  images: PortfolioImage[];
   onClose: () => void;
 }) {
   const handleKeyDown = useCallback(
@@ -230,21 +172,21 @@ function ProjectModal({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.25 }}
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6"
       onClick={onClose}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/85 backdrop-blur-md" />
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-md" />
 
       {/* Modal Container */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.92, y: 30 }}
+        initial={{ opacity: 0, scale: 0.96, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        transition={{ duration: 0.35, ease: "easeOut" }}
+        exit={{ opacity: 0, scale: 0.96, y: 15 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-5xl max-h-[90vh] glass-card-strong rounded-2xl overflow-hidden flex flex-col"
+        className="relative w-full max-w-6xl max-h-[92vh] glass-card-strong rounded-2xl overflow-hidden flex flex-col"
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-5 border-b border-white/10 flex-shrink-0">
@@ -253,7 +195,7 @@ function ProjectModal({
               {project.title}
             </h3>
             <p className="text-xs text-slate-400 font-sans mt-0.5">
-              {project.category} · {project.year} · {images.length} works
+              {project.category} · {project.year} · {images.length} assets
             </p>
           </div>
           <button
@@ -265,21 +207,22 @@ function ProjectModal({
           </button>
         </div>
 
-        {/* Dynamic Multi-span Masonry Grid Container */}
-        <div className="flex-1 overflow-y-auto p-3 sm:p-5">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 auto-rows-[140px] sm:auto-rows-[160px] gap-2 sm:gap-3 grid-flow-row-dense">
-            {images.map((src, i) => (
+        {/* Scrollable Dynamic Collage Grid */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+          {/* Main layout framework is an explicit 4-column tracks setup with micro row dimensions to tightly frame aspect items */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 auto-rows-[160px] sm:auto-rows-[180px] md:auto-rows-[200px] gap-3 sm:gap-4">
+            {images.map((img, i) => (
               <CollageImage
                 key={i}
-                src={src}
-                alt={`${project.title} — ${i + 1}`}
+                image={img}
+                alt={`${project.title} — Asset ${i + 1}`}
                 index={i}
               />
             ))}
           </div>
 
           {images.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-20 text-slate-500">
+            <div className="flex flex-col items-center justify-center py-24 text-slate-500">
               <Palette className="w-12 h-12 mb-3 opacity-30" />
               <p className="font-mono text-sm">Images coming soon</p>
             </div>
@@ -287,7 +230,7 @@ function ProjectModal({
         </div>
 
         {/* Footer */}
-        <div className="p-3 sm:p-4 border-t border-white/10 flex-shrink-0 text-center">
+        <div className="p-3 sm:p-4 border-t border-white/10 flex-shrink-0 text-center bg-black/20">
           <p className="text-xs text-slate-500 font-mono">
             Press <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-slate-300 text-[10px]">ESC</kbd> or click outside to close
           </p>
@@ -297,7 +240,7 @@ function ProjectModal({
   );
 }
 
-// ─── MAIN PORTFOLIO SHEET COMPONENT ───
+// ─── MAIN COMPONENT ───
 export default function DesignPortfolio() {
   const [activeProject, setActiveProject] = useState<number | null>(null);
   const activeDesign = designs.find((d) => d.id === activeProject);
@@ -305,7 +248,7 @@ export default function DesignPortfolio() {
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Header Section */}
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -347,7 +290,7 @@ export default function DesignPortfolio() {
           </div>
         </motion.div>
 
-        {/* Swiss Grid Board Grid */}
+        {/* Swiss Grid Layout */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -410,7 +353,7 @@ export default function DesignPortfolio() {
           ))}
         </motion.div>
 
-        {/* Creative Competencies Section */}
+        {/* Design Philosophy */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -431,7 +374,7 @@ export default function DesignPortfolio() {
         </motion.div>
       </div>
 
-      {/* Dynamic Overlay Sheet View */}
+      {/* Modal View */}
       <AnimatePresence>
         {activeProject !== null && activeDesign && (
           <ProjectModal
