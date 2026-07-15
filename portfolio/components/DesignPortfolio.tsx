@@ -1,7 +1,37 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Palette, Layers, Eye, ArrowUpRight, FileText, ExternalLink } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Palette, Layers, Eye, ArrowUpRight, FileText, ExternalLink, X } from "lucide-react";
+
+// ─── YOUR ACTUAL IMAGE PATHS ───
+const projectImages: Record<number, string[]> = {
+  1: [
+    "/work/tap (1).jpg",
+    "/work/tap (2).jpg",
+    "/work/tap (3).jpg",
+    "/work/tap (4).jpg",
+    "/work/tap (5).jpg",
+    "/work/tap (6).jpg",
+    "/work/tap (7).jpg",
+    "/work/tap (8).jpg",
+    "/work/tap (9).jpg",
+  ],
+  2: [
+    "/work/awc1.png",
+    "/work/awc2.png",
+    "/work/awc3.png",
+    "/work/awc4.png",
+    "/work/awc5.png",
+  ],
+  3: [
+    "/work/TSF1.png",
+    "/work/TSF2.png",
+    "/work/TSF3.png",
+    "/work/TSF4.png",
+    "/work/TSF5.png",
+  ],
+};
 
 const designs = [
   {
@@ -26,7 +56,7 @@ const designs = [
   },
   {
     id: 3,
-    title: "The safe Place",
+    title: "The Safe Place",
     category: "Lead Content Creator",
     year: "2022",
     description: "Illustrated posters on mental health issues and organised multiple events including seminars with board-certified psychologists.",
@@ -53,7 +83,139 @@ const itemVariants = {
   },
 };
 
+// ─── IMAGE PLACEHOLDER (shown when real image hasn't loaded or doesn't exist) ───
+function WorkImage({ src, alt }: { src: string; alt: string }) {
+  const [error, setError] = useState(false);
+
+  if (error) {
+    return (
+      <div className="w-full aspect-[4/3] rounded-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center gap-2">
+        <Palette className="w-8 h-8 text-slate-600" />
+        <span className="text-xs text-slate-500 font-mono">{alt}</span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className="w-full h-full object-cover rounded-xl"
+      onError={() => setError(true)}
+      loading="lazy"
+    />
+  );
+}
+
+// ─── MODAL COMPONENT ───
+function ProjectModal({
+  project,
+  images,
+  onClose,
+}: {
+  project: (typeof designs)[0];
+  images: string[];
+  onClose: () => void;
+}) {
+  // Close on Escape key
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    },
+    [onClose]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [handleKeyDown]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+      onClick={onClose}
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+
+      {/* Modal Container */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-4xl max-h-[85vh] glass-card-strong rounded-2xl overflow-hidden flex flex-col"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between p-5 sm:p-6 border-b border-white/10 flex-shrink-0">
+          <div>
+            <h3 className="font-display text-xl sm:text-2xl font-bold text-white">
+              {project.title}
+            </h3>
+            <p className="text-sm text-slate-400 font-sans mt-0.5">
+              {project.category} · {project.year}
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+            aria-label="Close"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Scrollable Image Grid */}
+        <div className="flex-1 overflow-y-auto p-5 sm:p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {images.map((src, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08, duration: 0.4 }}
+                className={`${i === 0 ? "sm:col-span-2" : ""} aspect-[4/3] rounded-xl overflow-hidden bg-white/5 border border-white/10`}
+              >
+                <WorkImage src={src} alt={`${project.title} — ${i + 1}`} />
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Empty state if no images */}
+          {images.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-20 text-slate-500">
+              <Palette className="w-12 h-12 mb-3 opacity-30" />
+              <p className="font-mono text-sm">Images coming soon</p>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="p-4 sm:p-5 border-t border-white/10 flex-shrink-0 text-center">
+          <p className="text-xs text-slate-500 font-mono">
+            Press <kbd className="px-1.5 py-0.5 rounded bg-white/10 text-slate-300 text-[10px]">ESC</kbd> or click outside to close
+          </p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// ─── MAIN COMPONENT ───
 export default function DesignPortfolio() {
+  const [activeProject, setActiveProject] = useState<number | null>(null);
+
+  const activeDesign = designs.find((d) => d.id === activeProject);
+
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
@@ -71,7 +233,7 @@ export default function DesignPortfolio() {
             </span>
           </div>
 
-          {/* Title row — title left, button right */}
+          {/* Title row */}
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
               <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight">
@@ -112,6 +274,7 @@ export default function DesignPortfolio() {
               key={design.id}
               variants={itemVariants}
               whileHover={{ y: -6, transition: { duration: 0.25 } }}
+              onClick={() => setActiveProject(design.id)}
               className={`group relative rounded-2xl overflow-hidden glass-card cursor-pointer ${
                 index === 0 ? "md:col-span-2" : ""
               }`}
@@ -188,6 +351,17 @@ export default function DesignPortfolio() {
           ))}
         </motion.div>
       </div>
+
+      {/* Modal */}
+      <AnimatePresence>
+        {activeProject !== null && activeDesign && (
+          <ProjectModal
+            project={activeDesign}
+            images={projectImages[activeProject] || []}
+            onClose={() => setActiveProject(null)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
