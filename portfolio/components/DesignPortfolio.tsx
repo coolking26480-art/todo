@@ -247,7 +247,7 @@ export default function DesignPortfolio() {
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
               <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight">
-                Design <span className="text-slate-600">Portfolio</span>
+                Design <span className="text-slate-200">Portfolio</span>
               </h2>
               <p className="mt-4 text-slate-400 max-w-2xl font-sans text-base leading-relaxed">
                 Crafting visual experiences that bridge the gap between complex scientific concepts and human intuition.
