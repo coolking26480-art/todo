@@ -70,7 +70,7 @@ export default function SubstackPublications() {
             Under Construction
           </h2>
           <p className="text-slate-400 text-sm font-serif leading-relaxed mb-6">
-            The Substack publication page is currently undergoing a structural update. New essays and features will be landing here shortly.
+            Please wait!
           </p>
           <div className="text-xs font-mono text-slate-500 uppercase tracking-widest">
             // Check back soon
