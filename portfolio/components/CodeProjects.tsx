@@ -80,7 +80,7 @@ export default function CodeProjects() {
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
             <div>
               <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight">
-                Neuro/Cognitive <span className="text-slate-600">Projects</span>
+                Neuro/Cognitive <span className="text-slate-500">Projects</span>
               </h2>
               <p className="mt-4 text-slate-400 max-w-2xl font-mono text-sm leading-relaxed">
                 Open-source tools and research frameworks at the intersection of computational neuroscience and machine learning.
