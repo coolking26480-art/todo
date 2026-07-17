@@ -81,7 +81,7 @@ export default function AboutMe() {
             </span>
           </div>
           <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white tracking-tight">
-            About <span className="text-slate-600">Me</span>
+            About <span className="text-slate-200">Me</span>
           </h2>
           <p className="mt-4 text-slate-400 max-w-2xl font-sans text-base leading-relaxed">
             A researcher and designer fascinated by the architecture of intelligence — both biological and artificial.
