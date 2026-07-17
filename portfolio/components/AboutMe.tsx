@@ -40,10 +40,10 @@ const experience = [
 ];
 
 const interests = [
-  { icon: "🧠", label: "Computational Neuroscience", desc: "Understanding the brain through mathematical models" },
-  { icon: "🎨", label: "Interface Design", desc: "Building tools that feel like extensions of thought" },
-  { icon: "📚", label: "Science Writing", desc: "Making complex ideas accessible through storytelling" },
-  { icon: "🏔️", label: "Mountaineering", desc: "Finding clarity in high-altitude solitude" },
+  { icon: "🧠", label: "Sculpting", desc: "Understanding the brain through mathematical models" },
+  { icon: "🎨", label: "Doom-Scrolling on YouTube", desc: "Building tools that feel like extensions of thought" },
+  { icon: "📚", label: "Travelling", desc: "Making complex ideas accessible through storytelling" },
+  { icon: "🏔️", label: "Squash & Strength Training", desc: "Finding clarity in high-altitude solitude" },
 ];
 
 const containerVariants = {
