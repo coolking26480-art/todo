@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { User, GraduationCap, Briefcase, Heart, MapPin, Calendar, Zap } from "lucide-react";
+import { User, GraduationCap, Briefcase, Heart, MapPin, Calendar, Zap, PenTool, Youtube, ChefHat, Dumbbell } from "lucide-react";
+
 
 const education = [
   {
@@ -40,10 +41,10 @@ const experience = [
 ];
 
 const interests = [
-  { icon: "🧠", label: "Sculpting", desc: "Understanding the brain through mathematical models" },
-  { icon: "🎨", label: "Doom-Scrolling on YouTube", desc: "Building tools that feel like extensions of thought" },
-  { icon: "📚", label: "Travelling", desc: "Making complex ideas accessible through storytelling" },
-  { icon: "🏔️", label: "Squash & Strength Training", desc: "Finding clarity in high-altitude solitude" },
+  { icon: PenTool, label: "Sculpting", desc: "Shaping form and texture by hand primarily with clay (also crafting blocks for printing)." },
+  { icon: Youtube, label: "Pinterest & YouTube", desc: "Curating visual inspiration and falling down rabbit holes of creative process videos." },
+  { icon: ChefHat, label: "Cooking", desc: "Experimenting with flavors and techniques from cuisines across the world." },
+  { icon: Dumbbell, label: "Squash", desc: "Playing squash for recreation, I also enjoy strength training at the gym." },
 ];
 
 const containerVariants = {
@@ -123,7 +124,7 @@ export default function AboutMe() {
                 A Psychology student and a creative at heart, I believe the most interesting problems live at the intersection of disciplines. This drives me to position myself at the crossroads of research, design, and storytelling. With experience spanning diverse domains, I leverage a deep understanding of human behavior to craft intuitive, impactful digital experiences and narratives. 
               </p>
               <p className="text-slate-400 text-sm leading-relaxed font-sans mt-4">
-                When not in the lab or at the keyboard, you will find me running, cooking, or experimenting with different art mediums.
+                When not in the lab or at the keyboard, you will find me at the gym, cooking, or experimenting with different art mediums.
               </p>
             </div>
           </motion.div>
@@ -215,20 +216,25 @@ export default function AboutMe() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {interests.map((interest) => (
-                  <motion.div
-                    key={interest.label}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4 }}
-                    whileHover={{ scale: 1.02 }}
-                    className="glass-card rounded-xl p-5 hover:border-white/10 transition-colors"
-                  >
-                    <div className="text-2xl mb-2">{interest.icon}</div>
-                    <h4 className="font-sans text-sm font-semibold text-white mb-1">{interest.label}</h4>
-                    <p className="text-xs text-slate-400 font-sans leading-relaxed">{interest.desc}</p>
-                  </motion.div>
-                ))}
+                {interests.map((interest) => {
+  const Icon = interest.icon;
+  return (
+    <motion.div
+      key={interest.label}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4 }}
+      whileHover={{ scale: 1.02 }}
+      className="glass-card rounded-xl p-5 hover:border-white/10 transition-colors"
+    >
+      <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-biolum-500/20 to-purple-500/10 border border-biolum-500/20 flex items-center justify-center mb-3">
+        <Icon className="w-5 h-5 text-biolum-300" />
+      </div>
+      <h4 className="font-sans text-sm font-semibold text-white mb-1">{interest.label}</h4>
+      <p className="text-xs text-slate-400 font-sans leading-relaxed">{interest.desc}</p>
+    </motion.div>
+  );
+})}
               </div>
             </motion.div>
           </div>
