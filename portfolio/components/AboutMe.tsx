@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { User, GraduationCap, Briefcase, Heart, MapPin, Calendar, Zap, PenTool, Youtube, ChefHat, Dumbbell } from "lucide-react";
+import { User, GraduationCap, Briefcase, Heart, MapPin, Calendar, Zap, Amphora, Youtube, ChefHat, Dumbbell } from "lucide-react";
 
 
 const education = [
@@ -41,7 +41,7 @@ const experience = [
 ];
 
 const interests = [
-  { icon: PenTool, label: "Sculpting", desc: "Shaping form and texture by hand primarily with clay (also crafting blocks for printing)." },
+  { icon: Amphora, label: "Sculpting", desc: "Shaping form and texture by hand primarily with clay (also crafting blocks for printing)." },
   { icon: Youtube, label: "Pinterest & YouTube", desc: "Curating visual inspiration and falling down rabbit holes of creative process videos." },
   { icon: ChefHat, label: "Cooking", desc: "Experimenting with flavors and techniques from cuisines across the world." },
   { icon: Dumbbell, label: "Squash", desc: "Playing squash for recreation, I also enjoy strength training at the gym." },
