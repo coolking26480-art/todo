@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import VideoSynapse from "./VideoSynapse";
-import { Mail, Github, Linkedin, file-user, ArrowDown } from "lucide-react";
+import { Mail, Github, Linkedin, fileuser, ArrowDown } from "lucide-react";
 
 interface HomePageProps {
   onNavigate: (view: string) => void;
@@ -137,7 +137,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 className="p-2 rounded-lg text-slate-400 hover:text-biolum-300 hover:bg-white/5 transition-all duration-200"
                 aria-label="Resume"
               >
-                <file-user size={18} />
+                <fileuser size={18} />
               </a>
             </div>
             <div className="text-slate-600 text-xs font-mono">
