@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import VideoSynapse from "./VideoSynapse";
-import { Mail, Github, Linkedin, Twitter, ArrowDown } from "lucide-react";
+import { Mail, Github, Linkedin, file-user, ArrowDown } from "lucide-react";
 
 interface HomePageProps {
   onNavigate: (view: string) => void;
@@ -131,13 +131,13 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 <Linkedin size={18} />
               </a>
               <a
-                href="https://twitter.com"
+                href="https://docs.google.com/document/d/1MUr948OZAkEJBGIWsD5YeqRgFKcNQGN-/edit?usp=sharing&ouid=107009242165559269117&rtpof=true&sd=true"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-lg text-slate-400 hover:text-biolum-300 hover:bg-white/5 transition-all duration-200"
-                aria-label="Twitter"
+                aria-label="Resume"
               >
-                <Twitter size={18} />
+                <file-user size={18} />
               </a>
             </div>
             <div className="text-slate-600 text-xs font-mono">
