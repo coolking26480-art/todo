@@ -12,7 +12,7 @@ const projects = [
     stats: { stars: 0, forks: 0 },
     icon: BadgeDollarSign,
     color: "from-indigo-500/20 to-violet-500/20",
-    borderColor: "border-amber-500/30",
+    borderColor: "border-indigo-500/30",
     link: "https://github.com/sujal03-04/Auditory-Tempo-Delay-Discounting-Task.git",
   },
   
