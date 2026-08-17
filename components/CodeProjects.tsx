@@ -1,11 +1,23 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Terminal, GitBranch, Star, ExternalLink, Cpu, Database, FlaskConical, Brain, Github, Activity } from "lucide-react";
+import { Terminal, GitBranch, Star, ExternalLink, Cpu, Database, Brain, Github, Activity, BadgeDollarSign } from "lucide-react";
 
 const projects = [
        {
     id: 1,
+    title: "Auditory Tempo DD Task",
+    description: "jsPsych-based Delay Discounting task adapted from Kirby et al. (1999) for Indian population, with five experimental conditions testing fast, slow, musical, and control auditory environments.",
+    tech: ["jsPsych", "Html", "Delay Discounting"],
+    stats: { stars: 0, forks: 0 },
+    icon: BadgeDollarSign,
+    color: "from-amber-500/20 to-orange-500/20",
+    borderColor: "border-amber-500/30",
+    link: "https://github.com/sujal03-04/Auditory-Tempo-Delay-Discounting-Task.git",
+  },
+  
+  {
+    id: 2,
     title: "EEG Alzheimer's classifier",
     description: "Random Forest that classifies Alzheimer's vs healthy controls  built from resting-state EEG spectral features, with MNE-based preprocessing (filtering, re-referencing, ICA) and Grad-CAM-free interpretability via feature importance.",
     tech: ["Python", "scikit-learn", "ICA", "Random forest"],
@@ -16,7 +28,7 @@ const projects = [
     link: "https://github.com/sujal03-04/EEG-Alzheimers-Classifier.git",
   },
 {
-    id: 2,
+    id: 3,
     title: "Brain MRI Tumor CNN",
     description: "CNN built from scratch in PyTorch for 4-class brain tumor classification from MRI scans, with Grad-CAM explainability. 90% test accuracy.",
     tech: ["Python", "NumPy", "Matplotlib", "CNN", "Grad-CAM"],  
@@ -27,7 +39,7 @@ const projects = [
     link: "https://hub.com/sujal03-04/Tumor-Classifier-CNN-Model.",
   },
   {
-    id: 3,
+    id: 4,
     title: "EEG Seizure LSTM",
     description: "Bidirectional LSTM for 5-class EEG seizure classification developed using Epileptic Seizure Recognition dataset (Andrzejak et al., UCI/GitHub mirror). Diagnosed and fixed gradient explosion mode collapse. 94% seizure recall.",
     tech: ["Python", "Pandas", "Pytorch", "LSTM"],
@@ -38,7 +50,7 @@ const projects = [
     link: "https://github.com/sujal03-04/EEG-Seizure-LSTM-Model.git",
   },
   {
-    id: 4,
+    id: 5,
     title: "Alzheimer's Risk Classifier",
     description: "Random Forest classifier predicting Alzheimer's diagnosis from clinical data. Trained on 2,149 patient records (El Kharoua, 2024, Kaggle) and projects 93% test accuracy.",
     tech: ["Python", "Random-Forest", "Scikit-Learn", "Hugging Face Deployment"],
