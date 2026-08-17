@@ -11,7 +11,7 @@ const projects = [
     tech: ["jsPsych", "Html", "Delay Discounting"],
     stats: { stars: 0, forks: 0 },
     icon: BadgeDollarSign,
-    color: "from-amber-500/20 to-orange-500/20",
+    color: "from-indigo-500/20 to-violet-500/20",
     borderColor: "border-amber-500/30",
     link: "https://github.com/sujal03-04/Auditory-Tempo-Delay-Discounting-Task.git",
   },
