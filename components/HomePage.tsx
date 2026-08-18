@@ -50,45 +50,49 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </motion.div>
 
         {/* Typography */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-center mt-6 sm:mt-9"
-        >
-          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight">
-            Sujal <span className="text-biolum-400 text-glow">Jain</span>
-          </h1>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            className="mt-3 text-lg sm:text-xl md:text-2xl text-slate-200 font-light tracking-wide"
-          >
-            Researcher <span className="text-slate-600">&</span> Designer
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.9, duration: 0.8 }}
-            className="mt-2 text-sm text-slate-300 font-mono tracking-wider"
-          >
-            Exploring the intersection of neuro/cognitive science, coding, and creative design
-          </motion.div>
-        </motion.div>
+<motion.div
+  initial={{ opacity: 0, y: 30 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, delay: 0.3 }}
+  className="text-center mt-10 sm:mt-12"
+>
+  <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight">
+    Sujal <span className="text-biolum-400 text-glow">Jain</span>
+  </h1>
 
-        {/* Scroll indicator — clickable, navigates to About */}
-        <motion.button
-          onClick={() => onNavigate("about")}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.8 }}
-          className="mt-6 animate-bounce cursor-pointer"
-          whileHover={{ scale: 1.2 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <ArrowDown className="w-5 h-5 text-slate-600 hover:text-biolum-400 transition-colors" />
-        </motion.button>
+  <motion.p
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ delay: 0.6, duration: 0.8 }}
+    className="mt-5 text-lg sm:text-xl md:text-2xl text-slate-200 font-light tracking-wide"
+  >
+    Researcher <span className="text-slate-600">&</span> Designer
+  </motion.p>
+
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ delay: 0.9, duration: 0.8 }}
+    className="mt-4 text-sm text-slate-300 font-mono tracking-wider"
+  >
+    Exploring the intersection of neuro/cognitive science, coding, and creative design
+  </motion.div>
+</motion.div>
+
+{/* Scroll indicator — clickable, navigates to About */}
+<motion.button
+  onClick={() => onNavigate("about")}
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ delay: 1.2, duration: 0.8 }}
+  className="mt-10 sm:mt-12 animate-bounce cursor-pointer"
+  whileHover={{ scale: 1.2 }}
+  whileTap={{ scale: 0.9 }}
+>
+  <ArrowDown className="w-5 h-5 text-slate-600 hover:text-biolum-400 transition-colors" />
+</motion.button>
+
+ 
       </div>
 
       {/* Footer */}
